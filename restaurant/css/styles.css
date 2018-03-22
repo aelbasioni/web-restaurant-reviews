@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 
 body,td,th,p{
@@ -50,20 +50,27 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 /* ====================== Navigation ====================== */
 nav {
-  width: 100%;
-  height: 80px;
-  background-color: #252831;
-  text-align:center;
+    width: 100%;
+    height: 80px;
+    background-color: #FFFFFF;
+    text-align: center;
+    border-bottom: 2px solid #C76656;
 }
 nav h1 {
   margin: auto;
+  padding-top: 10px;
 }
 nav h1 a {
-  color: #fff;
+  color: #6b6b6b;
   font-size: 14pt;
   font-weight: 200;
   letter-spacing: 10px;
   text-transform: uppercase;
+}
+nav .logo {
+  width: 60px;
+    vertical-align: middle;
+    margin-right: 10px;
 }
 #breadcrumb {
     padding: 10px 40px 16px;
@@ -106,8 +113,8 @@ nav h1 a {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  height: 50px;
-  background-color: #3397DB;
+  /*height: 50px;*/
+  background-color: #C76656;
   align-items: center;
 }
 .filter-options h2 {
@@ -116,6 +123,7 @@ nav h1 a {
   font-weight: normal;
   line-height: 1;
   margin: 0 20px;
+  display: inline-block;
 }
 .filter-options select {
   background-color: white;
