@@ -397,6 +397,13 @@ nav {
                 font-size: 12pt;
             }
 
+            #reviews-list li p:nth-child(3) {
+                font-weight: bold;
+                font-size: 14pt;
+                margin-top: 20px;
+
+            }
+
             #reviews-list li p:last-child {
                 text-align: justify;
                 margin: 20px auto;
@@ -407,6 +414,12 @@ nav {
 }
 
 
+.rating {
+    font-size:14pt;
+}
+.gold {
+    color:gold;
+}
 
 /* ===================== Media queries for index.html and common markups ================= */
 @media only screen and (max-width: 451px) {
