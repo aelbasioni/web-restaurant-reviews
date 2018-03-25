@@ -1,6 +1,7 @@
 let restaurant;
 var map;
 
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -19,6 +20,7 @@ window.initMap = () => {
     }
   });
 }
+
 
 /**
  * Get current restaurant from page URL.
@@ -45,6 +47,7 @@ fetchRestaurantFromURL = (callback) => {
   }
 }
 
+
 /**
  * Create restaurant HTML and add it to the webpage
  */
@@ -55,9 +58,31 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
+  //const image = document.getElementById('restaurant-img');
+  
+    /* Get the image src name and remove the extention */
+  const imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, ''); 
+  
   const image = document.getElementById('restaurant-img');
+  const picture = image.parentElement;
+  const source1 = picture.querySelector('source[type="image/webp"]');
+  const source2 = picture.querySelector('source[type="image/jpeg"]');
+
+  source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w, ${imageSrc}-800px.webp 800w`);
+  source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w, ${imageSrc}-800px.jpg 800w`);
+
+    //image.setAttribute('sizes', '(min-width: 667px) 50vw, (min-width: 961px) 30vw');
+  const sizes = '(min-width: 667px) 50vw, (min-width: 961px) 30vw, 90vw';
+  source1.setAttribute('sizes', sizes);
+  source2.setAttribute('sizes', sizes);
+  image.setAttribute('sizes', sizes);
+ 
+
+  console.log(image,source1);
+  //const image = picture.querySelector('img');
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+    //image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.src = `${imageSrc}-420px.jpg`;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -69,6 +94,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // fill reviews
   fillReviewsHTML();
 }
+
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -89,6 +115,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     hours.appendChild(row);
   }
 }
+
 
 /**
  * Create all reviews HTML and add them to the webpage.
@@ -111,6 +138,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   });
   container.appendChild(ul);
 }
+
 
 /**
  * Create review HTML and add it to the webpage.
