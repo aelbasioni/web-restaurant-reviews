@@ -127,12 +127,11 @@ createReviewHTML = (review) => {
 
   const rating = document.createElement('p');
   //rating.innerHTML = `Rating: ${review.rating}`;
+  //Add five stars and give them a gold class accordig to the rating value
   let ratingStars = '';
   let starsCount = 1;
   while(starsCount <= 5) {
-
-     ratingStars = `${ratingStars} ${(starsCount<=review.rating)?'<span class="rating gold">&#9733;</span>':'<span class="rating">&#9734</span>'}`;
-     
+     ratingStars = `${ratingStars} ${(starsCount<=review.rating)?'<span class="rating gold">&#9733;</span>':'<span class="rating">&#9734</span>'}`;     
      starsCount++;
   }
   rating.innerHTML = `Rating: ${ratingStars}`;
