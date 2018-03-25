@@ -12,18 +12,25 @@
 </head>
 
 <body>
+    <!-- A skip link to skip the map -->
+    <a href="#restaurants-list-container" class="skip-link">Skip the map</a>
+    <!-- Beginning header -->
     <header>
+        <!-- Beginning nav -->
         <nav>
             <h1><img src="img/logo.png" class="logo" alt="restaurant reviews"><a href="/">Restaurant Reviews</a></h1>
         </nav>
+        <!-- End nav -->
     </header>
+    <!-- End header -->
 
+    <!-- Beginning main -->
     <main id="maincontent">
         <section id="map-container">
             <div id="map"></div>
         </section>
 
-        <section>
+        <section id="restaurants-list-container" tab-index="-1">
             <div class="filter-options">
                 <label>
                     <h2>Filter Results</h2>
@@ -39,16 +46,22 @@
             <ul id="restaurants-list"></ul>
         </section>
     </main>
+    <!-- End main -->
 
+    <!-- Beginning scripts -->
+    <!-- Database helpers -->
     <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+    <!-- Main javascript file -->
     <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+    <!-- Google Maps -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDATtgo5EH-AGMQUgVipe74zk6kfOsiDaA&libraries=places&callback=initMap"></script>
+    <!-- End scripts -->
 
-
-
+    <!-- Beginning footer -->
     <footer id="footer">
         Copyright (c) 2017 <a href="/">Restaurant Reviews</a> All Rights Reserved.
     </footer>
+    <!-- End footer -->
 
 </body>
 

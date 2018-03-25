@@ -67,6 +67,20 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     display: block;
 }
 
+.skip-link {
+    position: absolute;
+    top:-80px;
+    left: 0;
+    padding: 8px;
+    z-index: 100;
+    text-decoration: none;
+
+}
+
+.skip-link:focus {
+    top:0px;
+    text-decoration: none;
+}
 
 #maincontent {
     background-color: #f3f3f3;
@@ -110,13 +124,14 @@ nav {
             font-weight: 200;
             letter-spacing: 10px;
             text-transform: uppercase;
+            padding:8px;
         }
 
 
     nav .logo {
         width: 60px;
         vertical-align: middle;
-        margin-right: 10px;
+        margin-right: 7px;
     }
 
 
