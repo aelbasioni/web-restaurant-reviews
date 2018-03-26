@@ -94,12 +94,95 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="img\1-300px.jpg" />
+    <Content Include="img\1-420px.jpg" />
+    <Content Include="img\1-650px.jpg" />
+    <Content Include="img\1-800px.jpg" />
+    <Content Include="img\10-300px.jpg" />
+    <Content Include="img\10-420px.jpg" />
+    <Content Include="img\10-650px.jpg" />
+    <Content Include="img\10-800px.jpg" />
+    <Content Include="img\2-300px.jpg" />
+    <Content Include="img\2-420px.jpg" />
+    <Content Include="img\2-650px.jpg" />
+    <Content Include="img\2-800px.jpg" />
+    <Content Include="img\3-300px.jpg" />
+    <Content Include="img\3-420px.jpg" />
+    <Content Include="img\3-650px.jpg" />
+    <Content Include="img\3-800px.jpg" />
+    <Content Include="img\4-300px.jpg" />
+    <Content Include="img\4-420px.jpg" />
+    <Content Include="img\4-650px.jpg" />
+    <Content Include="img\4-800px.jpg" />
+    <Content Include="img\5-300px.jpg" />
+    <Content Include="img\5-420px.jpg" />
+    <Content Include="img\5-650px.jpg" />
+    <Content Include="img\5-800px.jpg" />
+    <Content Include="img\6-300px.jpg" />
+    <Content Include="img\6-420px.jpg" />
+    <Content Include="img\6-650px.jpg" />
+    <Content Include="img\6-800px.jpg" />
+    <Content Include="img\7-300px.jpg" />
+    <Content Include="img\7-420px.jpg" />
+    <Content Include="img\7-650px.jpg" />
+    <Content Include="img\7-800px.jpg" />
+    <Content Include="img\8-300px.jpg" />
+    <Content Include="img\8-420px.jpg" />
+    <Content Include="img\8-650px.jpg" />
+    <Content Include="img\8-800px.jpg" />
+    <Content Include="img\9-300px.jpg" />
+    <Content Include="img\9-420px.jpg" />
+    <Content Include="img\9-650px.jpg" />
+    <Content Include="img\9-800px.jpg" />
+    <Content Include="img\loading.png" />
+    <Content Include="img\logo.png" />
+    <Content Include="img\logo_lg.png" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="data\restaurants.json" />
     <Content Include="README.md" />
+    <Content Include="img\1-300px.webp" />
+    <Content Include="img\1-420px.webp" />
+    <Content Include="img\1-650px.webp" />
+    <Content Include="img\1-800px.webp" />
+    <Content Include="img\10-300px.webp" />
+    <Content Include="img\10-420px.webp" />
+    <Content Include="img\10-650px.webp" />
+    <Content Include="img\10-800px.webp" />
+    <Content Include="img\2-300px.webp" />
+    <Content Include="img\2-420px.webp" />
+    <Content Include="img\2-650px.webp" />
+    <Content Include="img\2-800px.webp" />
+    <Content Include="img\3-300px.webp" />
+    <Content Include="img\3-420px.webp" />
+    <Content Include="img\3-650px.webp" />
+    <Content Include="img\3-800px.webp" />
+    <Content Include="img\4-300px.webp" />
+    <Content Include="img\4-420px.webp" />
+    <Content Include="img\4-650px.webp" />
+    <Content Include="img\4-800px.webp" />
+    <Content Include="img\5-300px.webp" />
+    <Content Include="img\5-420px.webp" />
+    <Content Include="img\5-650px.webp" />
+    <Content Include="img\5-800px.webp" />
+    <Content Include="img\6-300px.webp" />
+    <Content Include="img\6-420px.webp" />
+    <Content Include="img\6-650px.webp" />
+    <Content Include="img\6-800px.webp" />
+    <Content Include="img\7-300px.webp" />
+    <Content Include="img\7-420px.webp" />
+    <Content Include="img\7-650px.webp" />
+    <Content Include="img\7-800px.webp" />
+    <Content Include="img\8-300px.webp" />
+    <Content Include="img\8-420px.webp" />
+    <Content Include="img\8-650px.webp" />
+    <Content Include="img\8-800px.webp" />
+    <Content Include="img\9-300px.webp" />
+    <Content Include="img\9-420px.webp" />
+    <Content Include="img\9-650px.webp" />
+    <Content Include="img\9-800px.webp" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -109,21 +192,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\styles.css" />
-    <Content Include="img\1.jpg" />
-    <Content Include="img\10.jpg" />
-    <Content Include="img\2.jpg" />
-    <Content Include="img\3.jpg" />
-    <Content Include="img\4.jpg" />
-    <Content Include="img\5.jpg" />
-    <Content Include="img\6.jpg" />
-    <Content Include="img\7.jpg" />
-    <Content Include="img\8.jpg" />
-    <Content Include="img\9.jpg" />
     <Content Include="index.html" />
     <Content Include="js\dbhelper.js" />
     <Content Include="js\main.js" />
     <Content Include="js\restaurant_info.js" />
     <Content Include="restaurant.html" />
+    <Content Include="sw.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

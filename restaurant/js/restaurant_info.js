@@ -52,6 +52,9 @@ fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+  const map = document.getElementById('map-container');
+  map.setAttribute('aria-label', `location of ${restaurant.name} on the map`);
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -70,6 +73,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   source1.setAttribute('sizes', sizes);
   source2.setAttribute('sizes', sizes);
   image.setAttribute('sizes', sizes);
+  image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
   image.className = 'restaurant-img'
   image.src = `${imageSrc}-420px.jpg`;
 

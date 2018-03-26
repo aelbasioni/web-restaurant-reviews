@@ -96,6 +96,9 @@ updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
+  const map = document.getElementById('map-container');
+  map.setAttribute('aria-label', `map of ${cuisine} restaurants in ${neighborhood} neighborhood`);
+  
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
@@ -136,19 +139,20 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
+  
   const li = document.createElement('li');
 
   const image = document.createElement('img');
   /* Get the image src name and remove the extention */
   const imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, ''); 
   image.className = 'restaurant-img';
-  image.setAttribute('alt','');
+  image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
   image.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
   image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
   image.src = `${imageSrc}-300px.jpg`;
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
 
