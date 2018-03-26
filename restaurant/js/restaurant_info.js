@@ -78,7 +78,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.setAttribute('sizes', sizes);
  
 
-  console.log(image,source1);
   //const image = picture.querySelector('img');
   image.className = 'restaurant-img'
     //image.src = DBHelper.imageUrlForRestaurant(restaurant);
