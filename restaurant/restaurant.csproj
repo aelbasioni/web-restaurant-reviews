@@ -137,6 +137,7 @@
     <Content Include="img\loading.png" />
     <Content Include="img\logo.png" />
     <Content Include="img\logo_lg.png" />
+    <Content Include="js\localforage.min.js" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

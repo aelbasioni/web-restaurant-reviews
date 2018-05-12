@@ -14,6 +14,7 @@ self.addEventListener('install', (event) => {
             'js/main.js',
             'js/dbhelper.js',
             'js/restaurant_info.js',
+            'js/localforage.min.js',
             'css/styles.css',
             'img/logo.png',
             'https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff',
@@ -74,3 +75,61 @@ function serveImage(request) {
         });
     });
 }
+
+
+/*
+(function () {
+
+    const CACHE_NAME = 'static-cache-v1';
+    const urlsToCache = [
+      '.',
+      'index.html',
+      'restaurant.html',
+      'css/styles.css',
+      'data/restaurants.json',
+      'js/dbhelper.js',
+      'js/main.js',
+      'js/restaurant_info.js',
+      'js/localforage.min.js'
+    ];
+
+    self.addEventListener('install', (event) => {
+        event.waitUntil(
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+                return cache.addAll(urlsToCache);
+            })
+        );
+    });
+
+    self.addEventListener('fetch', (event) => {
+        event.respondWith(
+          caches.match(event.request)
+            .then(response => {
+                return response || fetchAndCache(event.request);
+            })
+        );
+    });
+
+    function fetchAndCache(url) {
+        return fetch(url)
+          .then(response => {
+              console.log(response, url);
+              if (!response.ok) {
+                  throw Error(response.statusText);
+                  //Promise.reject();
+              }
+
+              return caches.open(CACHE_NAME)
+                .then(cache => {
+                    cache.put(url, response.clone());
+                    return response;
+                })
+          })
+          //.catch(error => {
+          //    console.log('Request failed:', error);
+          //    return;
+          //});
+    }
+
+})();*/

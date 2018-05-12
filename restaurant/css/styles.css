@@ -243,6 +243,7 @@ nav {
         text-align: right;
         width: 270px;
         border-radius: 40px 0;
+        border:1px solid #dedede;
     }
 
 

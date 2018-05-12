@@ -8,15 +8,17 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+      /*const port = 8000 // Change this to your server port
+      return `http://localhost:${port}/data/restaurants.json`;*/
+      const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
   }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
+    /*let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
       if (xhr.status === 200) { // Got a success response from server!
@@ -28,13 +30,14 @@ class DBHelper {
         callback(error, null);
       }
     };
-    xhr.send();
+    xhr.send();*/
+      fetch(DBHelper.DATABASE_URL).then((response) =>  response.json()).then((data) => { callback(null, data); });
   }
 
   /**
    * Fetch a restaurant by its ID.
    */
-  static fetchRestaurantById(id, callback) {
+  /*static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
@@ -48,8 +51,15 @@ class DBHelper {
         }
       }
     });
-  }
+  }*/
 
+ static fetchRestaurantById(id,callback) {
+      fetch(`${DBHelper.DATABASE_URL}/${id}`).then(function (response) {
+          return response.json();
+      }).then(function (data) {
+          callback(null, data);;
+      })
+  }
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
@@ -144,13 +154,13 @@ class DBHelper {
    */
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
-  }
+      }
 
   /**
    * Restaurant image URL.
    */
-  static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    static imageUrlForRestaurant(restaurant) {
+        if (restaurant.photograph) return (`/img/${restaurant.photograph}`);
   }
 
   /**

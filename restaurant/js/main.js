@@ -143,13 +143,20 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
-  /* Get the image src name and remove the extention */
-  const imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, ''); 
-  image.className = 'restaurant-img';
-  image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
-  image.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
-  image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
-  image.src = `${imageSrc}-300px.jpg`;
+    /* Get the image src name and remove the extention */
+  let imageSrc = DBHelper.imageUrlForRestaurant(restaurant);
+  if(imageSrc){
+      imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, '');
+      image.className = 'restaurant-img';
+      image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
+      image.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
+      image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
+      image.src = `${imageSrc}-300px.jpg`;
+  }else{
+      image.className = 'restaurant-img';
+      image.setAttribute('alt', 'photo not available');
+      image.src = '/img/icon-no-image.png';
+  }
   li.append(image);
 
   const name = document.createElement('h3');
