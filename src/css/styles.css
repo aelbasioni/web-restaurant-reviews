@@ -487,7 +487,7 @@ nav {
 
 
 /* ===================== Media queries for index.html and common markups ================= */
-@media only screen and (max-width: 451px) {
+@media only screen and (max-width: 450px) {
     nav .logo {
         width: 45px;
     }
@@ -522,7 +522,7 @@ nav {
 }
 
 
-@media only screen and (min-width: 450px) and (max-width: 668px) {
+@media only screen and (min-width: 451px) and (max-width: 667px) {
     nav .logo {
         width: 50px;
     }
@@ -557,14 +557,14 @@ nav {
 }
 
 
-@media only screen and (min-width: 667px) and (max-width : 961px) {
+@media only screen and (min-width: 668px) and (max-width : 960px) {
     #restaurants-list {
         grid-template-columns: 50% 50%;
     }
 }
 
 
-@media only screen and (min-width : 960px) and (max-width : 1300px) {
+@media only screen and (min-width : 961px) and (max-width : 1300px) {
     #restaurants-list {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -613,7 +613,7 @@ nav {
 }
 
 
-@media only screen and (min-width: 667px) and (max-width : 961px) {
+@media only screen and (min-width: 668px) and (max-width : 960px) {
     #restaurant-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -644,7 +644,7 @@ nav {
 }
 
 
-@media only screen and (max-width: 666px) {
+@media only screen and (max-width: 667px) {
     #restaurant-img,
     #restaurant-cuisine {
         width: 100%;

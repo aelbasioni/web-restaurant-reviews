@@ -16,14 +16,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 var fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
-      self.neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
-    }
-  });
+    window.localforage.getItem(NEIBOURHOUDS_DBNAME, function(err, neighborhoods) {
+        if (neighborhoods) {
+            self.neighborhoods = neighborhoods;
+            fillNeighborhoodsHTML();
+        } else {
+            DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+                if (error) { // Got an error
+                    console.error(error);
+                } else {
+                    self.neighborhoods = neighborhoods;
+                    fillNeighborhoodsHTML();
+                }
+            });
+        }
+    });
+
 }
 
 /**
@@ -43,14 +51,23 @@ var fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  * Fetch all cuisines and set their HTML.
  */
 var fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.cuisines = cuisines;
-      fillCuisinesHTML();
-    }
-  });
+
+    window.localforage.getItem(CUISINE_DBNAME, function(err, cuisines) {
+        if (cuisines) {
+            self.cuisines = cuisines;
+            fillCuisinesHTML();
+        } else {
+            DBHelper.fetchCuisines((error, cuisines) => {
+                if (error) { // Got an error!
+                    console.error(error);
+                } else {
+                    self.cuisines = cuisines;
+                    fillCuisinesHTML();
+                }
+            });
+        }
+    });
+
 }
 
 /**
@@ -149,7 +166,7 @@ var createRestaurantHTML = (restaurant) => {
       imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, '');
       image.className = 'restaurant-img';
       image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
-      image.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
+      image.setAttribute('srcset', `${imageSrc}-300px.webp 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
       image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
       image.src = `${imageSrc}-300px.jpg`;
   }else{
@@ -210,4 +227,4 @@ window.registerServiceWorker = () => {
         console.log("SW registered");
     });
 }
-//asma registerServiceWorker();
+registerServiceWorker();

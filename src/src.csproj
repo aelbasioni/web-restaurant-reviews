@@ -149,6 +149,7 @@
     <Content Include="img\9-420px.webp" />
     <Content Include="img\9-650px.webp" />
     <Content Include="img\9-800px.webp" />
+    <Content Include="manifest.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

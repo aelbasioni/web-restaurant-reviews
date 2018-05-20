@@ -15,13 +15,13 @@ var sourcemaps = require('gulp-sourcemaps');
 var config = {
     //Include all js files but exclude any min.js files
     src: {
-        //js: ['./restaurant/js/*.js', '!./restaurant/js/*.min.js'],
-        js_index: ['./restaurant/js/localForage.min.js', './restaurant/js/dbhelper.js', './restaurant/js/main.js'],
-        js_restaurant_info: ['./restaurant/js/localForage.min.js', './restaurant/js/dbhelper.js', './restaurant/js/restaurant_info.js'],
-        css: ['./restaurant/css/*.css', '!./restaurant/css/*.min.css'],
-        img: './restaurant/img/*.jpg',
-        html: './restaurant/*.html',
-        root: './restaurant/'
+        //js: ['./src/js/*.js', '!./src/js/*.min.js'],
+        js_index: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/main.js'],
+        js_restaurant_info: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/restaurant_info.js'],
+        css: ['./src/css/*.css', '!./src/css/*.min.css'],
+        img: './src/img/*.jpg',
+        html: './src/*.html',
+        root: './src/'
     },
     dist: {
         js: './dist/js/',
@@ -34,7 +34,8 @@ var config = {
 
 gulp.task('copy', function () {
     //gulp.src(config.src.root + '/web.config').pipe(gulp.dest(config.dist.root)),
-    gulp.src(config.src.root + '/sw.js').pipe(gulp.dest(config.dist.root)),
+    gulp.src(config.src.root + 'sw.js').pipe(gulp.dest(config.dist.root)),
+    gulp.src(config.src.root + 'manifest.json').pipe(gulp.dest(config.dist.root)),
     gulp.src(config.src.root + 'data/*.json').pipe(gulp.dest(config.dist.root + 'data/'))
     
 });
@@ -49,7 +50,7 @@ gulp.task('html:dist', function () {
 gulp.task('css:dist', function () {
     return gulp.src(config.src.css)
         .pipe(plumber())
-        .pipe(concat('style.min.css'))
+        //.pipe(concat('style.min.css'))
         .pipe(cleanCSS())
         .pipe(gulp.dest(config.dist.css));
 });
@@ -58,22 +59,22 @@ gulp.task('css:dist', function () {
 gulp.task('js_index:dist', function () {
     return gulp.src(config.src.js_index)
         .pipe(plumber())
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(babel())
         .pipe(concat('script_index.min.js'))
         .pipe(uglify())
-        //.pipe(sourcemaps.write())
+        .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
 
 gulp.task('js_info:dist', function () {
     return gulp.src(config.src.js_restaurant_info)
         .pipe(plumber())
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(babel())
         .pipe(concat('script_info.min.js'))
         .pipe(uglify())
-        //.pipe(sourcemaps.write())
+        .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
 
@@ -86,7 +87,7 @@ gulp.task('watch', function () {
     gulp.watch([config.src.js_index], ['js_index:dist']);
     gulp.watch([config.src.js_restaurant_info], ['js_info:dist']);
     //gulp.watch([config.src.root + '/web.config', config.src.root + '/sw.js', 'data/*.json'], ['copy']);
-    gulp.watch([config.src.root + '/sw.js', 'data/*.json'], ['copy']);
+    gulp.watch([config.src.root + 'sw.js', config.src.root + 'manifest.json', config.src.root + 'data/*.json'], ['copy']);
 });
 
 //Set a default tasks

@@ -13,8 +13,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>dist</RootNamespace>
-    <AssemblyName>dist</AssemblyName>
+    <RootNamespace>restaurant</RootNamespace>
+    <AssemblyName>restaurant</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -104,6 +104,7 @@
     <Content Include="img\9-420px.webp" />
     <Content Include="img\9-650px.webp" />
     <Content Include="img\9-800px.webp" />
+    <Content Include="manifest.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -158,14 +159,15 @@
     <Content Include="img\logo.png" />
     <Content Include="img\logo_lg.png" />
     <Content Include="index.html" />
-    <Content Include="js\script_index.min.js" />
-    <Content Include="js\script_info.min.js" />
     <Content Include="restaurant.html" />
     <Content Include="sw.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="js\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

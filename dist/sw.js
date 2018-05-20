@@ -11,12 +11,11 @@ self.addEventListener('install', (event) => {
           return cache.addAll([
             '/',
             '/restaurant.html',
-            'js/main.js',
-            'js/dbhelper.js',
-            'js/restaurant_info.js',
-            'js/localforage.min.js',
-            'css/styles.css',
-            'img/logo.png',
+            '/js/script_index.min.js',
+            '/js/script_info.min.js',
+            '/css/style.min.css',
+            '/img/logo.png',
+            '/favicon.ico',
             'https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff',
             'https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff'
           ]);
