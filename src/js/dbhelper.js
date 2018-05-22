@@ -7,7 +7,9 @@ const CUISINE_DBNAME = "cuisines";
 
 // This will rename the database from "localforage"
 // to "Hipster PDA App".
-window.localforage.config({
+
+if (window.localforage)
+    window.localforage.config({
     name: 'Restaurants_App'
 });
 

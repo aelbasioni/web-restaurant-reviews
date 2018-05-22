@@ -16,8 +16,10 @@ var config = {
     //Include all js files but exclude any min.js files
     src: {
         //js: ['./src/js/*.js', '!./src/js/*.min.js'],
-        js_index: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/main.js'],
-        js_restaurant_info: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/restaurant_info.js'],
+        js_index: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
+        js_restaurant_info: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/restaurant_info.js', './src/js/registerserviceworker.js'],
+        //js_index: ['./src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
+        //js_restaurant_info: ['./src/js/dbhelper.js', './src/js/restaurant_info.js', './src/js/registerserviceworker.js'],
         css: ['./src/css/*.css', '!./src/css/*.min.css'],
         img: './src/img/*.jpg',
         html: './src/*.html',
@@ -50,7 +52,7 @@ gulp.task('html:dist', function () {
 gulp.task('css:dist', function () {
     return gulp.src(config.src.css)
         .pipe(plumber())
-        //.pipe(concat('style.min.css'))
+        .pipe(concat('style.min.css'))
         .pipe(cleanCSS())
         .pipe(gulp.dest(config.dist.css));
 });

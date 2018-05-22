@@ -60,6 +60,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\styles_media_md.css" />
+    <Content Include="css\styles_media_lg.css" />
+    <Content Include="css\styles_media_sm.css" />
     <Content Include="img\1-300px.jpg" />
     <Content Include="img\1-420px.jpg" />
     <Content Include="img\1-650px.jpg" />
@@ -104,6 +107,7 @@
     <Content Include="img\logo.png" />
     <Content Include="img\logo_lg.png" />
     <Content Include="js\localforage.min.js" />
+    <Content Include="js\registerserviceworker.js" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>

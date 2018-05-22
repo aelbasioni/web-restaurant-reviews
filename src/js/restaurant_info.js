@@ -35,15 +35,32 @@ var fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      self.restaurant = restaurant;
-      if (!restaurant) {
-        console.error(error);
-        return;
-      }
-      fillRestaurantHTML();
-      callback(null, restaurant)
-    });
+
+      window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
+          if (restaurants) {
+              const restaurant = restaurants.find(r => r.id == id);
+              self.restaurant = restaurant;
+              if (!restaurant) {
+                  console.error(error);
+                  return;
+              }
+              fillRestaurantHTML();
+              callback(null, restaurant)
+          } else {
+              // Fetch all restaurants
+              DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+                  self.restaurant = restaurant;
+                  if (!restaurant) {
+                      console.error(error);
+                      return;
+                  }
+                  fillRestaurantHTML();
+                  callback(null, restaurant)
+              });
+          }
+      });
+
+    
   }
 }
 

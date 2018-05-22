@@ -149,6 +149,26 @@ var fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
+
+  //start observing images to enter the view:
+  const myImgs = document.querySelectorAll('.restaurant-img');
+  console.log("myImgs",myImgs);
+  var observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+          if (entry.intersectionRatio > 0) {
+              console.log('in the view',entry);
+              setImageSrc(entry.target);
+              observer.unobserve(entry.target);
+          } else {
+              console.log('out of view');
+          }
+      });
+  });
+  myImgs.forEach(image => {
+      observer.observe(image);
+  });
+
+  // add markers to the map:
   addMarkersToMap();
 }
 
@@ -160,20 +180,12 @@ var createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
-    /* Get the image src name and remove the extention */
+  /* Get the image src name and remove the extention */
   let imageSrc = DBHelper.imageUrlForRestaurant(restaurant);
-  if(imageSrc){
-      imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, '');
-      image.className = 'restaurant-img';
-      image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
-      image.setAttribute('srcset', `${imageSrc}-300px.webp 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
-      image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
-      image.src = `${imageSrc}-300px.jpg`;
-  }else{
-      image.className = 'restaurant-img';
-      image.setAttribute('alt', 'photo not available');
-      image.src = '/img/icon-no-image.png';
-  }
+  image.setAttribute("data-src",imageSrc);
+  image.setAttribute("data-name",restaurant.name);
+
+  image.className = 'restaurant-img';
   li.append(image);
 
   const name = document.createElement('h3');
@@ -198,6 +210,23 @@ var createRestaurantHTML = (restaurant) => {
 }
 
 
+var setImageSrc =function(image){
+    let restaurantName = image.getAttribute('data-name');
+    let imageSrc = image.getAttribute('data-src');
+    image.setAttribute("data-src",imageSrc);
+ 
+    if(imageSrc !== 'undefined'){
+        imageSrc = imageSrc.replace(/\.jpg$/, '');
+        image.setAttribute('alt', `photo of ${restaurantName} restaurant`);
+        image.setAttribute('srcset', `${imageSrc}-300px.webp 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
+        image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
+        image.src = `${imageSrc}-300px.jpg`;
+    }else{
+        image.setAttribute('alt', 'photo not available');
+        image.src = '/img/icon-no-image.png';
+    }
+}
+
 /**
  * Add markers for current restaurants to the map.
  */
@@ -212,19 +241,3 @@ var addMarkersToMap = (restaurants = self.restaurants) => {
   });
 }
 
-
-/*
-* Register service worker for offline support
-*/
-window.registerServiceWorker = () => {
-    if (!navigator.serviceWorker) return;
-
-    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-        if (!navigator.serviceWorker.controller) {
-            return;
-        }
-
-        console.log("SW registered");
-    });
-}
-registerServiceWorker();
