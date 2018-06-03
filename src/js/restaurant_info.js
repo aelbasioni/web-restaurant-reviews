@@ -6,6 +6,69 @@ var map;
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+    fetchRestaurantFromURL((error, restaurant) => {
+        if (error) { // Got an error!
+            console.error(error);
+        } else {
+            
+            const map_c = document.getElementById('map-container'); 
+            //start observing map to enter the view:
+            var observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    console.log("entry.intersectionRatio3",entry.intersectionRatio)
+                    if (entry.intersectionRatio > 0) {
+                        
+                        showStaticMap();
+                        observer.unobserve(entry.target);
+                    }else if (entry.intersectionRatio >= 0.5) {
+                        
+                        showMap();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });    
+            observer.observe(map_c);
+            fillBreadcrumb();
+        }
+    });
+};
+
+var showStaticMap = function(){
+
+    const static_map = document.getElementById('static_map'); 
+    if(self.restaurant && self.restaurant.latlng){
+        const w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        console.log("ddd7",w);
+        const src =`https://maps.googleapis.com/maps/api/staticmap?center=${self.restaurant.latlng.lat},${self.restaurant.latlng.lng}&zoom=14&size=${w}x400&format=jpg&maptype=roadmap&markers=color:red&key=AIzaSyDATtgo5EH-AGMQUgVipe74zk6kfOsiDaA`;                
+        static_map.setAttribute("src",src);
+        static_map.style.display = 'block';
+
+        window.onscroll = function(){setTimeout(function(){ showMap();}, 100);window.onscroll=null;}        
+      
+    }
+};
+
+
+
+var showMap = function(){
+
+    const static_map = document.getElementById('static_map'); 
+    const m = document.getElementById('map'); 
+    if(self.restaurant && self.restaurant.latlng){
+        self.map = new google.maps.Map(m, {
+            zoom: 16,
+            center: restaurant.latlng,
+            scrollwheel: false
+        });
+        
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+
+        static_map.style.display = 'none';
+        m.style.display = 'block';
+    }
+};
+
+/*window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
@@ -19,7 +82,7 @@ window.initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
-}
+}*/
 
 
 /**
@@ -84,9 +147,12 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
   const picture = image.parentElement;
   const source1 = picture.querySelector('source[type="image/webp"]');
   const source2 = picture.querySelector('source[type="image/jpeg"]');
-  source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w, ${imageSrc}-800px.webp 800w`);
-  source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w, ${imageSrc}-800px.jpg 800w`);
-  const sizes = '(min-width: 667px) 50vw, (min-width: 961px) 30vw, 90vw';
+  //source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w, ${imageSrc}-800px.webp 800w`);
+  //source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w, ${imageSrc}-800px.jpg 800w`);
+    //const sizes = '(min-width: 667px) 50vw, (min-width: 961px) 30vw, 90vw';
+  source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
+  source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
+  const sizes = '(max-width: 667px) 70vw, (min-width: 667px) 30vw';
   source1.setAttribute('sizes', sizes);
   source2.setAttribute('sizes', sizes);
   image.setAttribute('sizes', sizes);

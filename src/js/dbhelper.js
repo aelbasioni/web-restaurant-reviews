@@ -27,6 +27,7 @@ class DBHelper {
         return `http://localhost:${port}/restaurants`;
     }
 
+
     /**
     * Fetch all restaurants.
     */

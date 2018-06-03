@@ -7,9 +7,11 @@ var markers = []
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', (event) => {    
+  updateRestaurants();  
   fetchNeighborhoods();
   fetchCuisines();
+  
 });
 
 /**
@@ -84,22 +86,39 @@ var fillCuisinesHTML = (cuisines = self.cuisines) => {
   });
 }
 
+
 /**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
-  updateRestaurants();
-}
+    const m = document.getElementById('map');
+   
+    //start observing map to enter the view:
+    var observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.intersectionRatio > 0) {
+                //console.log('in the view',entry);
+                showMap(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    });    
+    observer.observe(m);
 
+}
+var showMap = function(m){
+    let loc = {
+        lat: 40.722216,
+        lng: -73.987501
+    };
+    self.map = new google.maps.Map(m, {
+        zoom: 12,
+        center: loc,
+        scrollwheel: false
+    });  
+
+    addMarkersToMap();
+};
 /**
  * Update page and map for current restaurants.
  */
@@ -136,8 +155,10 @@ var resetRestaurants = (restaurants) => {
   ul.innerHTML = '';
 
   // Remove all map markers
-  self.markers.forEach(m => m.setMap(null));
-  self.markers = [];
+  if(self.markers){
+    self.markers.forEach(m => m.setMap(null));
+    self.markers = [];
+  }
   self.restaurants = restaurants;
 }
 
@@ -152,16 +173,16 @@ var fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
   //start observing images to enter the view:
   const myImgs = document.querySelectorAll('.restaurant-img');
-  console.log("myImgs",myImgs);
+  //console.log("myImgs",myImgs);
   var observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
           if (entry.intersectionRatio > 0) {
-              console.log('in the view',entry);
+              //console.log('in the view',entry);
               setImageSrc(entry.target);
               observer.unobserve(entry.target);
-          } else {
-              console.log('out of view');
-          }
+          } //else {
+             // console.log('out of view');
+          //}
       });
   });
   myImgs.forEach(image => {
@@ -169,7 +190,8 @@ var fillRestaurantsHTML = (restaurants = self.restaurants) => {
   });
 
   // add markers to the map:
-  addMarkersToMap();
+  if(self.map)
+    addMarkersToMap();
 }
 
 /**

@@ -11,6 +11,8 @@ var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 var plumber = require('gulp-plumber');
 var sourcemaps = require('gulp-sourcemaps');
+var critical = require('critical');
+
 
 var config = {
     //Include all js files but exclude any min.js files
@@ -37,6 +39,7 @@ var config = {
 gulp.task('copy', function () {
     //gulp.src(config.src.root + '/web.config').pipe(gulp.dest(config.dist.root)),
     gulp.src(config.src.root + 'sw.js').pipe(gulp.dest(config.dist.root)),
+    gulp.src(config.src.root + 'js/map.js').pipe(gulp.dest(config.dist.js)),
     gulp.src(config.src.root + 'manifest.json').pipe(gulp.dest(config.dist.root)),
     gulp.src(config.src.root + 'data/*.json').pipe(gulp.dest(config.dist.root + 'data/'))
     
@@ -69,6 +72,16 @@ gulp.task('js_index:dist', function () {
         .pipe(gulp.dest(config.dist.js));
 });
 
+gulp.task('js_index_critical:dist', function () {
+    return gulp.src(config.src.root+"js/main_critical.js")
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .pipe(uglify())
+        .pipe(sourcemaps.write("./"))
+        .pipe(gulp.dest(config.dist.js));
+});
+
 gulp.task('js_info:dist', function () {
     return gulp.src(config.src.js_restaurant_info)
         .pipe(plumber())
@@ -80,7 +93,53 @@ gulp.task('js_info:dist', function () {
         .pipe(gulp.dest(config.dist.js));
 });
 
-gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist', 'js_info:dist', 'copy']);
+gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist', 'js_info:dist', 'js_index_critical:dist','copy']);
+
+
+
+gulp.task('css:critical_index', function (cb) {
+    critical.generate({
+        base: config.dist.root,
+        src: 'index.html',
+        css: [config.dist.root+'css/style.min.css'],
+        dimensions: [{
+            width: 320,
+            height: 480
+        }, {
+            width: 768,
+            height: 1024
+        }, {
+            width: 1280,
+            height: 960
+        }],
+        dest: 'css/critical_index.css',
+        minify: true,
+        extract: false,
+        ignore: ['font-face']
+    });
+});
+
+gulp.task('css:critical_info', function (cb) {
+    critical.generate({
+        base: config.dist.root,
+        src: 'restaurant.html',
+        css: [config.dist.root+'css/style.min.css'],
+        dimensions: [{
+            width: 320,
+            height: 480
+        }, {
+            width: 768,
+            height: 1024
+        }, {
+            width: 1280,
+            height: 960
+        }],
+        dest: 'css/critical_info.css',
+        minify: true,
+        extract: false,
+        ignore: ['font-face']
+    });
+});
 
 
 gulp.task('watch', function () {
@@ -89,10 +148,10 @@ gulp.task('watch', function () {
     gulp.watch([config.src.js_index], ['js_index:dist']);
     gulp.watch([config.src.js_restaurant_info], ['js_info:dist']);
     //gulp.watch([config.src.root + '/web.config', config.src.root + '/sw.js', 'data/*.json'], ['copy']);
-    gulp.watch([config.src.root + 'sw.js', config.src.root + 'manifest.json', config.src.root + 'data/*.json'], ['copy']);
+    gulp.watch([config.src.root + 'sw.js', config.src.root + 'js/map.js', config.src.root + 'manifest.json', config.src.root + 'data/*.json'], ['copy']);
 });
 
 //Set a default tasks
-gulp.task('default', ['copy:dist','watch'], function () {
+gulp.task('default', ['copy:dist','watch','css:critical_index','css:critical_info'], function () {
     // place code for your default task here
 });
