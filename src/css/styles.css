@@ -94,8 +94,7 @@ section {
 
 #maincontent {
     background-color: #f3f3f3;
-    min-height: 100vh;/*calc(100vh - 148px);  100% minus header and footer heights */
-    padding-top:148px;
+    min-height: 100vh;/*calc(100vh - 148px);  100% minus header and footer heights */   
 }
 
 
@@ -187,9 +186,11 @@ nav {
     height: 400px;
     width: 100%;
     background-color: #ccc;
-    display:none;
 }
 
+.inside#map, #static_map {
+    display:none;
+}
 
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
@@ -377,7 +378,7 @@ nav {
 
 
 #restaurant-cuisine {
-    background-color: #c15641;
+    background-color: #c15540;
     color: #fff;
     font-size: 12pt;
     font-weight: 300;
@@ -405,6 +406,7 @@ nav {
 #restaurant-container {
     display: flex;
     flex-wrap: wrap;
+    padding-top: 130px;
 }
 
 #restaurant-container .box {
@@ -451,7 +453,7 @@ nav {
 
 
             #reviews-list li p:first-child {
-                background-color: #c15641;
+                background-color: #c15540;
                 color: #FFF;
                 padding: 15px 30px;
                 font-size: 20pt;
@@ -600,10 +602,11 @@ nav {
         border-left-width: 0;
         position: relative;
         border-bottom: 2px solid #fdfdfd;
-        border-top: 2px solid #fdfdfd;
     }
 
-   
+   #map-container {      
+        border-top: 2px solid #fdfdfd;
+    }
 
 
 @media only screen and (min-width: 668px) and (max-width : 960px) {

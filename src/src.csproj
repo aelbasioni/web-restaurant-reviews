@@ -60,10 +60,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="css\styles_media_md.css" />
-    <Content Include="css\styles_media_lg.css" />
-    <Content Include="css\styles_media_sm.css" />
-    <Content Include="css\styles_old.css" />
+    <Content Include="css\styles.css" />
+    <Content Include="favicon.ico" />
     <Content Include="img\1-300px.jpg" />
     <Content Include="img\1-420px.jpg" />
     <Content Include="img\1-650px.jpg" />
@@ -108,10 +106,11 @@
     <Content Include="img\logo.png" />
     <Content Include="img\logo_lg.png" />
     <Content Include="js\localforage.min.js" />
-    <Content Include="js\main_critical.js" />
-    <Content Include="js\map.js" />
+    <Content Include="js\main.js" />
+    <Content Include="js\polyfills\fetch.js" />
+    <Content Include="js\polyfills\intersection-observer.js" />
+    <Content Include="js\polyfills\promise.js" />
     <Content Include="js\registerserviceworker.js" />
-    <Content Include="map.html" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
@@ -169,13 +168,14 @@
     <Content Include="index.html" />
     <Content Include="js\dbhelper.js" />
     <Content Include="js\restaurant_info.js" />
-    <Content Include="restaurant_old.html" />
+    <Content Include="restaurant.html" />
     <Content Include="sw.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

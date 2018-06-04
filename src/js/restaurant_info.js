@@ -1,7 +1,13 @@
 let restaurant;
 var map;
 
+const observer_config = {
+    threshold: [0, 0.50]
+};
 
+document.addEventListener('DOMContentLoaded', (event) => {    
+   
+});
 /**
  * Initialize Google map, called from HTML.
  */
@@ -12,25 +18,24 @@ window.initMap = () => {
         } else {
             
             const map_c = document.getElementById('map-container'); 
+            map_c.setAttribute('aria-label', `map of ${restaurant.name}`);
             //start observing map to enter the view:
             var observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
-                    console.log("entry.intersectionRatio3",entry.intersectionRatio)
-                    if (entry.intersectionRatio > 0) {
-                        
+                    if (entry.intersectionRatio > 0 && entry.intersectionRatio < 0.5 ) {
                         showStaticMap();
-                        observer.unobserve(entry.target);
+                        //observer.unobserve(entry.target);
                     }else if (entry.intersectionRatio >= 0.5) {
-                        
                         showMap();
                         observer.unobserve(entry.target);
                     }
                 });
-            });    
+            },observer_config);    
             observer.observe(map_c);
             fillBreadcrumb();
         }
     });
+  
 };
 
 var showStaticMap = function(){
@@ -38,12 +43,12 @@ var showStaticMap = function(){
     const static_map = document.getElementById('static_map'); 
     if(self.restaurant && self.restaurant.latlng){
         const w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        console.log("ddd7",w);
         const src =`https://maps.googleapis.com/maps/api/staticmap?center=${self.restaurant.latlng.lat},${self.restaurant.latlng.lng}&zoom=14&size=${w}x400&format=jpg&maptype=roadmap&markers=color:red&key=AIzaSyDATtgo5EH-AGMQUgVipe74zk6kfOsiDaA`;                
+        static_map.setAttribute('alt', `map of ${self.restaurant.name} restaurant`);
         static_map.setAttribute("src",src);
         static_map.style.display = 'block';
 
-        window.onscroll = function(){setTimeout(function(){ showMap();}, 100);window.onscroll=null;}        
+        //window.onscroll = function(){setTimeout(function(){ showMap();}, 200);window.onscroll=null;}        
       
     }
 };
@@ -141,8 +146,6 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  /* Get the image src name and remove the extention */
-  const imageSrc = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.jpg$/, '');   
   const image = document.getElementById('restaurant-img');
   const picture = image.parentElement;
   const source1 = picture.querySelector('source[type="image/webp"]');
@@ -150,15 +153,25 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
   //source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w, ${imageSrc}-800px.webp 800w`);
   //source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w, ${imageSrc}-800px.jpg 800w`);
     //const sizes = '(min-width: 667px) 50vw, (min-width: 961px) 30vw, 90vw';
-  source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
-  source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
-  const sizes = '(max-width: 667px) 70vw, (min-width: 667px) 30vw';
-  source1.setAttribute('sizes', sizes);
-  source2.setAttribute('sizes', sizes);
-  image.setAttribute('sizes', sizes);
-  image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
+    /* Get the image src name and remove the extention */
+  let imageSrc = DBHelper.imageUrlForRestaurant(restaurant);
+  if(imageSrc !== undefined){
+      imageSrc = imageSrc.replace(/\.jpg$/, '');  
+      source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
+      source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w`);
+      const sizes = '(max-width: 667px) 70vw, (min-width: 667px) 30vw';
+      source1.setAttribute('sizes', sizes);
+      source2.setAttribute('sizes', sizes);
+      image.setAttribute('sizes', sizes);
+      image.setAttribute('alt', `photo of ${restaurant.name} restaurant`);
+      image.src = `${imageSrc}-420px.jpg`;
+  }else{
+      image.setAttribute('alt', 'photo not available');
+      image.src = '/img/icon-no-image.png';
+  }
+  
   image.className = 'restaurant-img'
-  image.src = `${imageSrc}-420px.jpg`;
+  
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
