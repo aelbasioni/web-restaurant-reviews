@@ -5,6 +5,9 @@ const ALL_CACHES = [
   CONTENT_IMAGES_CACHE
 ];
 
+/**
+ * Cache the site assets 
+ */
 self.addEventListener('install', (event) => {
     event.waitUntil(
       caches.open(STATIC_CACHE_NAME).then(function (cache) {
@@ -25,6 +28,9 @@ self.addEventListener('install', (event) => {
 });
 
 
+/**
+ * Delete the old caches if new one exists  
+ */
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,6 +45,9 @@ self.addEventListener('activate', (event) => {
 });
 
 
+/**
+ * Check the cache for the requests before sending them to the network  
+ */
 self.addEventListener('fetch', (event) => {
     const requestUrl = new URL(event.request.url);
     if (requestUrl.origin === location.origin) {        
@@ -61,8 +70,12 @@ self.addEventListener('fetch', (event) => {
 });
 
 
+/**
+ * Get the requested images from the cache if exist,
+ * otherwise fetch them from the network then cache them  
+ */
 function serveImage(request) {
-    var storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
+    var storageUrl = request.url.replace(/-\d+px\.(jpg|webp)$/, '');
     
     return caches.open(CONTENT_IMAGES_CACHE).then((cache) => {
         return cache.match(storageUrl).then((response) => {
@@ -76,60 +89,3 @@ function serveImage(request) {
     });
 }
 
-
-/*
-(function () {
-
-    const CACHE_NAME = 'static-cache-v1';
-    const urlsToCache = [
-      '.',
-      'index.html',
-      'restaurant.html',
-      'css/styles.css',
-      'data/restaurants.json',
-      'js/dbhelper.js',
-      'js/main.js',
-      'js/restaurant_info.js',
-      'js/localforage.min.js'
-    ];
-
-    self.addEventListener('install', (event) => {
-        event.waitUntil(
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-                return cache.addAll(urlsToCache);
-            })
-        );
-    });
-
-    self.addEventListener('fetch', (event) => {
-        event.respondWith(
-          caches.match(event.request)
-            .then(response => {
-                return response || fetchAndCache(event.request);
-            })
-        );
-    });
-
-    function fetchAndCache(url) {
-        return fetch(url)
-          .then(response => {
-              console.log(response, url);
-              if (!response.ok) {
-                  throw Error(response.statusText);
-                  //Promise.reject();
-              }
-
-              return caches.open(CACHE_NAME)
-                .then(cache => {
-                    cache.put(url, response.clone());
-                    return response;
-                })
-          })
-          //.catch(error => {
-          //    console.log('Request failed:', error);
-          //    return;
-          //});
-    }
-
-})();*/

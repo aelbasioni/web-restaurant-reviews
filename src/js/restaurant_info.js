@@ -1,13 +1,12 @@
 let restaurant;
 var map;
 
+
 const observer_config = {
-    threshold: [0, 0.50]
+   threshold: [0, 0.50]
 };
 
-document.addEventListener('DOMContentLoaded', (event) => {    
-   
-});
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -19,75 +18,65 @@ window.initMap = () => {
             
             const map_c = document.getElementById('map-container'); 
             map_c.setAttribute('aria-label', `map of ${restaurant.name}`);
-            //start observing map to enter the view:
+            //start observing the map to enter the view:
             var observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
+                    //show a STATIC map if a small part of it is in the view
                     if (entry.intersectionRatio > 0 && entry.intersectionRatio < 0.5 ) {
                         showStaticMap();
-                        //observer.unobserve(entry.target);
-                    }else if (entry.intersectionRatio >= 0.5) {
+                    }else if (entry.intersectionRatio >= 0.5) { //show an INTERACTIVE map if a big part of it is in the view
+                     
                         showMap();
                         observer.unobserve(entry.target);
                     }
                 });
             },observer_config);    
             observer.observe(map_c);
+            
             fillBreadcrumb();
         }
     });
   
 };
 
+
+/**
+ * Fetch a STATIC map if a small part of it is in the view
+ */
 var showStaticMap = function(){
+  const static_map = document.getElementById('static_map'); 
+  if(self.restaurant && self.restaurant.latlng){
+     const w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+     const src =`https://maps.googleapis.com/maps/api/staticmap?center=${self.restaurant.latlng.lat},${self.restaurant.latlng.lng}&zoom=14&size=${w}x400&format=jpg&maptype=roadmap&markers=color:red&key=AIzaSyDATtgo5EH-AGMQUgVipe74zk6kfOsiDaA`;                
+     static_map.setAttribute('alt', `map of ${self.restaurant.name} restaurant`);
+     static_map.setAttribute("src",src);
+     static_map.style.display = 'block';
 
-    const static_map = document.getElementById('static_map'); 
-    if(self.restaurant && self.restaurant.latlng){
-        const w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        const src =`https://maps.googleapis.com/maps/api/staticmap?center=${self.restaurant.latlng.lat},${self.restaurant.latlng.lng}&zoom=14&size=${w}x400&format=jpg&maptype=roadmap&markers=color:red&key=AIzaSyDATtgo5EH-AGMQUgVipe74zk6kfOsiDaA`;                
-        static_map.setAttribute('alt', `map of ${self.restaurant.name} restaurant`);
-        static_map.setAttribute("src",src);
-        static_map.style.display = 'block';
-
-        //window.onscroll = function(){setTimeout(function(){ showMap();}, 200);window.onscroll=null;}        
-      
-    }
+     //window.onscroll = function(){setTimeout(function(){ showMap();}, 200);window.onscroll=null;}              
+  }
 };
 
 
-
+/**
+ * Fetch an INTERACTIVE map if a small part of it is in the view
+ */
 var showMap = function(){
 
-    const static_map = document.getElementById('static_map'); 
-    const m = document.getElementById('map'); 
-    if(self.restaurant && self.restaurant.latlng){
-        self.map = new google.maps.Map(m, {
-            zoom: 16,
-            center: restaurant.latlng,
-            scrollwheel: false
-        });
+  const static_map = document.getElementById('static_map'); 
+  const m = document.getElementById('map'); 
+  if(self.restaurant && self.restaurant.latlng){
+     self.map = new google.maps.Map(m, {
+         zoom: 16,
+         center: restaurant.latlng,
+         scrollwheel: false
+     });
         
-        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-
-        static_map.style.display = 'none';
-        m.style.display = 'block';
-    }
-};
-
-/*window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
-  });
-}*/
+
+      static_map.style.display = 'none';
+      m.style.display = 'block';
+   }
+};
 
 
 /**
@@ -103,33 +92,31 @@ var fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
+      //Search for the required restaurant in indexedDB first
+    window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
+        if (restaurants) {
+            const restaurant = restaurants.find(r => r.id == id);
+            handleFoundRestaurant(restaurant,callback);
 
-      window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
-          if (restaurants) {
-              const restaurant = restaurants.find(r => r.id == id);
-              self.restaurant = restaurant;
-              if (!restaurant) {
-                  console.error(error);
-                  return;
-              }
-              fillRestaurantHTML();
-              callback(null, restaurant)
-          } else {
-              // Fetch all restaurants
-              DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-                  self.restaurant = restaurant;
-                  if (!restaurant) {
-                      console.error(error);
-                      return;
-                  }
-                  fillRestaurantHTML();
-                  callback(null, restaurant)
-              });
-          }
-      });
-
-    
+        } else {
+            // Fetch restaurant by its id if not exist in indexedDB 
+            DBHelper.fetchRestaurantById(id, (error, restaurant) => {                
+                handleFoundRestaurant(restaurant,callback);
+            });
+        }
+    });    
   }
+}
+
+
+var handleFoundRestaurant = function(restaurant,callback){
+    self.restaurant = restaurant;
+    if (!restaurant) {
+        console.error(error);
+        return;
+    }
+    fillRestaurantHTML();
+    callback(null, restaurant)
 }
 
 
@@ -150,10 +137,7 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
   const picture = image.parentElement;
   const source1 = picture.querySelector('source[type="image/webp"]');
   const source2 = picture.querySelector('source[type="image/jpeg"]');
-  //source1.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w, ${imageSrc}-800px.webp 800w`);
-  //source2.setAttribute('srcset', `${imageSrc}-300px.jpg 300w, ${imageSrc}-420px.jpg 400w, ${imageSrc}-650px.jpg 600w, ${imageSrc}-800px.jpg 800w`);
-    //const sizes = '(min-width: 667px) 50vw, (min-width: 961px) 30vw, 90vw';
-    /* Get the image src name and remove the extention */
+ 
   let imageSrc = DBHelper.imageUrlForRestaurant(restaurant);
   if(imageSrc !== undefined){
       imageSrc = imageSrc.replace(/\.jpg$/, '');  
@@ -288,3 +272,4 @@ var getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+

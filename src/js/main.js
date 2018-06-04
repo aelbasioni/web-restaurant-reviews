@@ -4,6 +4,7 @@
 var map
 var markers = []
 
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     fetchCuisines();
   
 });
+
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -36,6 +38,7 @@ var fetchNeighborhoods = () => {
 
 }
 
+
 /**
  * Set neighborhoods HTML.
  */
@@ -48,6 +51,7 @@ var fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
         select.append(option);
     });
 }
+
 
 /**
  * Fetch all cuisines and set their HTML.
@@ -71,6 +75,7 @@ var fetchCuisines = () => {
     });
 
 }
+
 
 /**
  * Set cuisines HTML.
@@ -97,15 +102,18 @@ window.initMap = () => {
     var observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.intersectionRatio > 0) {
-                //console.log('in the view',entry);
                 showMap(entry.target);
                 observer.unobserve(entry.target);
             }
         });
     });    
     observer.observe(m);
-
 }
+
+
+/**
+ * Show Google map when being in the view
+ */
 var showMap = function(m){
     let loc = {
         lat: 40.722216,
@@ -119,6 +127,8 @@ var showMap = function(m){
 
     addMarkersToMap();
 };
+
+
 /**
  * Update page and map for current restaurants.
  */
@@ -145,6 +155,7 @@ var updateRestaurants = () => {
     })
 }
 
+
 /**
  * Clear current restaurants, their HTML and remove their map markers.
  */
@@ -162,6 +173,7 @@ var resetRestaurants = (restaurants) => {
     self.restaurants = restaurants;
 }
 
+
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
@@ -173,16 +185,12 @@ var fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
     //start observing images to enter the view:
     const myImgs = document.querySelectorAll('.restaurant-img');
-    //console.log("myImgs",myImgs);
     var observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.intersectionRatio > 0) {
-                //console.log('in the view',entry);
                 setImageSrc(entry.target);
                 observer.unobserve(entry.target);
-            } //else {
-            // console.log('out of view');
-            //}
+            }
         });
     });
     myImgs.forEach(image => {
@@ -194,6 +202,7 @@ var fillRestaurantsHTML = (restaurants = self.restaurants) => {
         addMarkersToMap();
 }
 
+
 /**
  * Create restaurant HTML.
  */
@@ -202,7 +211,6 @@ var createRestaurantHTML = (restaurant) => {
     const li = document.createElement('li');
 
     const image = document.createElement('img');
-    /* Get the image src name and remove the extention */
     let imageSrc = DBHelper.imageUrlForRestaurant(restaurant);
     image.setAttribute("data-src",imageSrc);    
     if(imageSrc !== undefined)
@@ -235,11 +243,15 @@ var createRestaurantHTML = (restaurant) => {
 }
 
 
+/**
+ * Fetch the image src if in the view
+ */
 var setImageSrc =function(image){
     let imageSrc = image.getAttribute('data-src');
     image.setAttribute("data-src",imageSrc);
  
     if(imageSrc !== 'undefined'){
+        /* remove the image extention */
         imageSrc = imageSrc.replace(/\.jpg$/, '');
         image.setAttribute('srcset', `${imageSrc}-300px.webp 300w, ${imageSrc}-420px.webp 400w, ${imageSrc}-650px.webp 600w`);
         image.setAttribute('sizes', '(max-width: 667px) 90vw, 300px');
@@ -248,6 +260,7 @@ var setImageSrc =function(image){
         image.src = '/img/icon-no-image.png';
     }
 }
+
 
 /**
  * Add markers for current restaurants to the map.

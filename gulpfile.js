@@ -5,13 +5,6 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 
 var gulp = require("gulp");
 var $ = require('gulp-load-plugins')();
-/*var htmlclean = require('gulp-htmlclean');
-var cleanCss = require('gulp-clean-css');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var babel = require('gulp-babel');
-var plumber = require('gulp-plumber');
-var sourcemaps = require('gulp-sourcemaps');*/
 var critical = require('critical');
 
 
@@ -19,14 +12,11 @@ var config = {
     //Include all js files but exclude any min.js files
     src: {
         root: './src/',
-        //js: ['./src/js/*.js', '!./src/js/*.min.js'],
         js_common: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/registerserviceworker.js'],
         //js_index: ['./src/js/main.js'],
         //js_restaurant_info: ['./src/js/restaurant_info.js'],
         js_index: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
         js_restaurant_info: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/restaurant_info.js', './src/js/registerserviceworker.js'],
-        //js_index: ['./src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
-        //js_restaurant_info: ['./src/js/dbhelper.js', './src/js/restaurant_info.js', './src/js/registerserviceworker.js'],
         css: ['./src/css/*.css', '!./src/css/*.min.css'],
         html: './src/*.html',
         img: './src/img/*.jpg',
@@ -43,14 +33,13 @@ var config = {
     }
 }
 
+
 gulp.task('copy', function () {
-    //gulp.src(config.src.root + '/web.config').pipe(gulp.dest(config.dist.root)),
     gulp.src(config.src.root + 'sw.js').pipe(gulp.dest(config.dist.root)),
-    //gulp.src(config.src.root + 'js/map.js').pipe(gulp.dest(config.dist.js)),
     gulp.src(config.src.root + 'manifest.json').pipe(gulp.dest(config.dist.root)),
-    gulp.src(config.src.root + 'data/*.json').pipe(gulp.dest(config.dist.root + 'data/'))
-    
+    gulp.src(config.src.root + 'data/*.json').pipe(gulp.dest(config.dist.root + 'data/'))    
 });
+
 
 gulp.task('html:dist', function () {
     return gulp.src(config.src.html)
@@ -58,6 +47,7 @@ gulp.task('html:dist', function () {
         .pipe($.htmlclean())
         .pipe(gulp.dest(config.dist.html));
 });
+
 
 gulp.task('css:dist', function () {
     return gulp.src(config.src.css)
@@ -72,6 +62,7 @@ gulp.task('css:dist', function () {
         .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.css));
 });
+
 
 gulp.task('js_polyfills:dist', function () {
     return gulp.src(config.src.polyfills)
@@ -107,6 +98,7 @@ gulp.task('js_index:dist', function () {
         .pipe(gulp.dest(config.dist.js));
 });
 
+
 gulp.task('js_info:dist', function () {
     return gulp.src(config.src.js_restaurant_info)
         .pipe($.plumber())
@@ -118,8 +110,8 @@ gulp.task('js_info:dist', function () {
         .pipe(gulp.dest(config.dist.js));
 });
 
-gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_common:dist','js_index:dist', 'js_info:dist', 'js_polyfills:dist','copy']);
 
+gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist', 'js_info:dist', 'js_polyfills:dist','copy']);
 
 
 gulp.task('css:critical_index', function (cb) {
@@ -144,6 +136,7 @@ gulp.task('css:critical_index', function (cb) {
     });
 });
 
+
 gulp.task('css:critical_info', function (cb) {
     critical.generate({
         base: config.dist.root,
@@ -165,6 +158,7 @@ gulp.task('css:critical_info', function (cb) {
         ignore: ['font-face']
     });
 });
+
 
 /********************* Image opt & resizing ******************/
 gulp.task('img-opt-large', function () {
@@ -271,11 +265,12 @@ gulp.task('watch', function () {
     gulp.watch([config.src.css], ['css:dist']);
     gulp.watch([config.src.js_index], ['js_index:dist']);
     gulp.watch([config.src.js_restaurant_info], ['js_info:dist']);
-    //gulp.watch([config.src.root + '/web.config', config.src.root + '/sw.js', 'data/*.json'], ['copy']);
     gulp.watch([config.src.root + 'sw.js', config.src.root + 'js/map.js', config.src.root + 'manifest.json', config.src.root + 'data/*.json'], ['copy']);
 });
+
 
 //Set a default tasks
 gulp.task('default', ['copy:dist','watch','css:critical_index','css:critical_info'], function () {
     // place code for your default task here
 });
+
