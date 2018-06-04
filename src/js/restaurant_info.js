@@ -51,8 +51,9 @@ var showStaticMap = function(){
      static_map.setAttribute('alt', `map of ${self.restaurant.name} restaurant`);
      static_map.setAttribute("src",src);
      static_map.style.display = 'block';
-
-     //window.onscroll = function(){setTimeout(function(){ showMap();}, 200);window.onscroll=null;}              
+     const m = document.getElementById('map'); 
+     m.style.display = 'none';
+      //window.onscroll = function(){setTimeout(function(){ showMap();}, 200);window.onscroll=null;}              
   }
 };
 
@@ -195,9 +196,9 @@ var fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours)
  */
 var fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
+  /*const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
-  container.appendChild(title);
+  container.appendChild(title);*/
 
   if (!reviews) {
     const noReviews = document.createElement('p');

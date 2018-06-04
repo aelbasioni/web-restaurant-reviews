@@ -57,9 +57,33 @@
             <img id="static_map" src="" />
             <div id="map"></div>
         </section>
-        <!-- End map -->
+        <!-- End map -->        
         <!-- Beginning reviews -->
         <section id="reviews-container">
+            <h2>Reviews</h2>
+            <!-- review form -->
+            <!-- end review form -->
+            <form id="review-form">
+                <p>Add review</p>
+                <label>
+                    Name:<br />
+                    <input id="user_name" type="text" placeholder="Type your name" />
+                </label>
+                <label>
+                    Rate this restaurant:<br />
+                    <span class="rating-block">
+                        <span role="button" aria-label="rate 1 of 5" tabindex="0"><span class="rating">&#9734</span></span>
+                        <span role="button" aria-label="rate 2 of 5" tabindex="0"><span class="rating">&#9734</span></span>
+                        <span role="button" aria-label="rate 3 of 5" tabindex="0"><span class="rating">&#9734</span></span>
+                        <span role="button" aria-label="rate 4 of 5" tabindex="0"><span class="rating">&#9734</span></span>
+                        <span role="button" aria-label="rate 5 of 5" tabindex="0"><span class="rating">&#9734</span></span>
+                    </span>
+                </label>
+                <label>
+                    <textarea id="review-comment" placeholder="Type your review" aria-label="type your review" rows="5"></textarea>
+                </label>
+                <a href="dsds">Add</a>
+            </form>
             <ul id="reviews-list"></ul>
         </section>
         <!-- End reviews -->

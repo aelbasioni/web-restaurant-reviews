@@ -435,13 +435,13 @@ nav {
     }
 
 
-#reviews-list {
+#reviews-list, #review-form{
     margin: 0;
     padding: 0;
 }
 
 
-    #reviews-list li {
+    #reviews-list li, #review-form {
         background-color: #fff;
         border: 2px solid #f3f3f3;
         display: block;
@@ -454,19 +454,20 @@ nav {
     }
 
 
-        #reviews-list li p {
+        #reviews-list li p, #review-form label {
             margin: 0 0 10px;
             padding-left: 30px;
             padding-right: 30px;
         }
 
 
-            #reviews-list li p:first-child {
+            #reviews-list li p:first-child, #review-form p:first-child{
                 background-color: #c15540;
                 color: #FFF;
                 padding: 15px 30px;
                 font-size: 20pt;
                 border-radius: 40px 0 0;
+                margin-top:0;
             }
 
 
@@ -479,7 +480,7 @@ nav {
             }
 
 
-            #reviews-list li p:nth-child(3) {
+            #reviews-list li p:nth-child(3), #review-form label{
                 font-weight: bold;
                 font-size: 14pt;
                 margin-top: 20px;
@@ -514,6 +515,44 @@ nav {
 
 .gold {
     color: gold;
+}
+
+
+#review-form label {
+    display:block;
+}
+
+
+#review-form input, #review-form textarea {
+    padding:6px 12px;
+    width:95%;
+    margin:0 0 10px;
+}
+
+
+#review-form a {
+    background-color: #cd4c00;
+    color: #fff;
+    display: inline-block;
+    font-size: 14pt;
+    margin: 15px 1px 1px;
+    padding: 10px 60px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 40px 0;
+    float:right;
+}
+
+#review-form a:hover,
+        #review-form a:focus,.rating-block > span:hover,.rating-block > span:focus {
+            outline: 0;
+            -webkit-box-shadow: 0 0 1px 2px #3397db;
+            box-shadow: 0 0 1px 2px #3397db;
+        }
+
+.rating-block > span {
+    cursor:pointer;
 }
 
 
