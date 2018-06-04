@@ -4,19 +4,21 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 */
 
 var gulp = require("gulp");
-var htmlclean = require('gulp-htmlclean');
-var cleanCSS = require('gulp-clean-css');
+var $ = require('gulp-load-plugins')();
+/*var htmlclean = require('gulp-htmlclean');
+var cleanCss = require('gulp-clean-css');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 var plumber = require('gulp-plumber');
-var sourcemaps = require('gulp-sourcemaps');
+var sourcemaps = require('gulp-sourcemaps');*/
 var critical = require('critical');
 
 
 var config = {
     //Include all js files but exclude any min.js files
     src: {
+        root: './src/',
         //js: ['./src/js/*.js', '!./src/js/*.min.js'],
         js_common: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/registerserviceworker.js'],
         //js_index: ['./src/js/main.js'],
@@ -26,9 +28,9 @@ var config = {
         //js_index: ['./src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
         //js_restaurant_info: ['./src/js/dbhelper.js', './src/js/restaurant_info.js', './src/js/registerserviceworker.js'],
         css: ['./src/css/*.css', '!./src/css/*.min.css'],
-        img: './src/img/*.jpg',
         html: './src/*.html',
-        root: './src/',
+        img: './src/img/*.jpg',
+        img_logo: './src/img/logo.png',
         polyfills: './src/js/polyfills/*.js'
     },
     dist: {
@@ -52,63 +54,67 @@ gulp.task('copy', function () {
 
 gulp.task('html:dist', function () {
     return gulp.src(config.src.html)
-        .pipe(plumber())      
-        .pipe(htmlclean())
+        .pipe($.plumber())
+        .pipe($.htmlclean())
         .pipe(gulp.dest(config.dist.html));
 });
 
 gulp.task('css:dist', function () {
     return gulp.src(config.src.css)
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(concat('style.min.css'))
-        .pipe(cleanCSS())
-        .pipe(sourcemaps.write("./"))
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
+        .pipe($.concat('style.min.css'))
+        .pipe($.cleanCss())
+        .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.css));
 });
 
 gulp.task('js_polyfills:dist', function () {
     return gulp.src(config.src.polyfills)
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(uglify())
-        .pipe(sourcemaps.write("./"))
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.babel())
+        .pipe($.uglify())
+        .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.polyfills));
 });
 
 
 gulp.task('js_common:dist', function () {
     return gulp.src(config.src.js_common)
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(concat('common.min.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write("./"))
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.babel())
+        .pipe($.concat('common.min.js'))
+        .pipe($.uglify())
+        .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
 
 
 gulp.task('js_index:dist', function () {
     return gulp.src(config.src.js_index)
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(concat('script_index.min.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write("./"))
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.babel())
+        .pipe($.concat('script_index.min.js'))
+        .pipe($.uglify())
+        .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
 
 gulp.task('js_info:dist', function () {
     return gulp.src(config.src.js_restaurant_info)
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(concat('script_info.min.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write("./"))
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.babel())
+        .pipe($.concat('script_info.min.js'))
+        .pipe($.uglify())
+        .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
 
@@ -159,6 +165,105 @@ gulp.task('css:critical_info', function (cb) {
         ignore: ['font-face']
     });
 });
+
+/********************* Image opt & resizing ******************/
+gulp.task('img-opt-large', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 800 }))
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-800px' }))
+    .pipe(gulp.dest(config.dist.img))
+});
+
+
+gulp.task('img-webp-large', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.webp())
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-800px' }))
+    .pipe(gulp.dest(config.dist.img))
+});
+
+
+gulp.task('img-resize-medium2', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 650 }))
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-650px' }))
+    .pipe(gulp.dest(config.dist.img))
+
+});
+
+
+gulp.task('img-resize-medium', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 420 }))
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-420px' }))
+    .pipe(gulp.dest(config.dist.img))
+});
+
+
+gulp.task('img-resize-small', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 300 }))
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-300px' }))
+    .pipe(gulp.dest(config.dist.img))
+
+});
+
+gulp.task('img-resize-medium2-webp', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 650 }))
+    .pipe($.webp())
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-650px' }))
+    .pipe(gulp.dest(config.dist.img))
+
+});
+
+
+gulp.task('img-resize-medium-webp', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 420 }))
+    .pipe($.webp())
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-420px' }))
+    .pipe(gulp.dest(config.dist.img))
+});
+
+
+gulp.task('img-resize-small-webp', function () {
+    gulp.src(config.src.img)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 300 }))
+    .pipe($.webp())
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe($.rename({ suffix: '-300px' }))
+    .pipe(gulp.dest(config.dist.img))
+
+});
+
+
+gulp.task('logo-resize', function () {
+    gulp.src(config.src.img_logo)
+    .pipe($.changed(config.dist.img))
+    .pipe($.imageResize({ width: 100 }))
+    .pipe($.imagemin({ progressive: true, optimizationLevel: 10 }))
+    .pipe(gulp.dest(config.dist.img))
+
+});
+
+gulp.task('img-resize', ['img-opt-large', 'img-webp-large', 'img-resize-medium', 'img-resize-small','logo-resize']);
+gulp.task('img-resize-webp', ['img-resize-medium2-webp', 'img-resize-medium-webp', 'img-resize-small-webp']);
 
 
 gulp.task('watch', function () {

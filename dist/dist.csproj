@@ -160,6 +160,7 @@
     <Content Include="img\logo_lg.png" />
     <Content Include="index.html" />
     <Content Include="restaurant.html" />
+    <Content Include="restaurant_old.html" />
     <Content Include="sw.js" />
     <Content Include="Web.config" />
   </ItemGroup>

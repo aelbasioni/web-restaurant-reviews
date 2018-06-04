@@ -15,6 +15,7 @@ self.addEventListener('install', (event) => {
             '/js/script_info.min.js',
             '/css/style.min.css',
             '/img/logo.png',
+            '/img/icon-no-image.png',
             '/favicon.ico',
             'https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff',
             'https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff'
