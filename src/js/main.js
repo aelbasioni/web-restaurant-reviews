@@ -12,7 +12,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     updateRestaurants();  
     fetchNeighborhoods();
     fetchCuisines();
-  
+    
+    const toggleFav =  document.getElementById('toggle_fav');
+    toggleFav.onclick = function(){
+        console.log(toggleFav.checked);
+    }
 });
 
 
@@ -232,6 +236,15 @@ var createRestaurantHTML = (restaurant) => {
     const address = document.createElement('p');
     address.innerHTML = restaurant.address;
     li.append(address);
+
+    const fav = document.createElement('input');
+    fav.value = '\u2606';
+    fav.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
+    fav.setAttribute("type","button");
+    fav.setAttribute("title","Favorites");
+    fav.className = 'rating fav left';
+    fav.onclick = function(){console.log(restaurant.id);}
+    li.append(fav)
 
     const more = document.createElement('a');
     more.innerHTML = 'View Details';

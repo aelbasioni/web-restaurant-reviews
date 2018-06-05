@@ -6,7 +6,46 @@ const observer_config = {
    threshold: [0, 0.50]
 };
 
+document.addEventListener('DOMContentLoaded', (event) => {    
+    attachClickEvents();
+});
 
+var attachClickEvents = function(){
+    const addReviewBTN =  document.getElementById('add_review');
+    addReviewBTN.onclick = function(){
+        console.log("btn");
+    }
+
+    const ratingStars = document.querySelectorAll('.rating-block > .rating');
+    if(ratingStars){
+        ratingStars.forEach((ratingStar) => {
+            ratingStar.onclick = function(){
+                setRating(ratingStar.getAttribute("data-value"),ratingStars);                
+            }
+        });
+    }
+    
+};
+
+
+var setRating = function(ratingValue,ratingStarsElements){
+    
+    ratingValue = ratingValue-1;
+    let starsCount = 0;
+    while(starsCount < 5) {
+        if(starsCount <= ratingValue && !ratingStarsElements[starsCount].classList.contains("gold")){
+            ratingStarsElements[starsCount].classList.add("gold");
+            ratingStarsElements[starsCount].value = '\u2605';
+        }
+        
+        if(starsCount > ratingValue && ratingStarsElements[starsCount].classList.contains("gold")){
+            ratingStarsElements[starsCount].classList.remove("gold");
+            ratingStarsElements[starsCount].value = '\u2606';
+        }
+
+        starsCount++;
+    }
+}
 /**
  * Initialize Google map, called from HTML.
  */
@@ -130,6 +169,14 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  const fav = document.createElement('input');
+  fav.value = '\u2606';
+  fav.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
+  fav.setAttribute("type","button");
+  fav.setAttribute("title","Favorites");
+  fav.className = 'rating fav';
+  fav.onclick = function(){console.log(restaurant.id);}
+  name.append(fav)
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;

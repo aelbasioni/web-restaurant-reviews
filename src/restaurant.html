@@ -15,7 +15,7 @@
 
 <body class="inside">
     <!-- A skip link to skip the map -->
-    <a href="#restaurant-container" class="skip-link">Skip the map</a>
+    <a href="#reviews-container" class="skip-link">Skip the map</a>
     <!-- Beginning header -->
     <header>
         <!-- Beginning nav -->
@@ -72,17 +72,17 @@
                 <label>
                     Rate this restaurant:<br />
                     <span class="rating-block">
-                        <span role="button" aria-label="rate 1 of 5" tabindex="0"><span class="rating">&#9734</span></span>
-                        <span role="button" aria-label="rate 2 of 5" tabindex="0"><span class="rating">&#9734</span></span>
-                        <span role="button" aria-label="rate 3 of 5" tabindex="0"><span class="rating">&#9734</span></span>
-                        <span role="button" aria-label="rate 4 of 5" tabindex="0"><span class="rating">&#9734</span></span>
-                        <span role="button" aria-label="rate 5 of 5" tabindex="0"><span class="rating">&#9734</span></span>
+                        <input type="button" aria-label="rate 1 of 5" data-value="1" class="rating" value="&#9734"/>
+                        <input type="button" aria-label="rate 2 of 5" data-value="2" class="rating" value="&#9734"/>
+                        <input type="button" aria-label="rate 3 of 5" data-value="3" class="rating" value="&#9734"/>
+                        <input type="button" aria-label="rate 4 of 5" data-value="4" class="rating" value="&#9734"/>
+                        <input type="button" aria-label="rate 5 of 5" data-value="5" class="rating" value="&#9734"/>
                     </span>
                 </label>
                 <label>
                     <textarea id="review-comment" placeholder="Type your review" aria-label="type your review" rows="5"></textarea>
                 </label>
-                <a href="dsds">Add</a>
+                <input type="button" id="add_review" value="Add"/>
             </form>
             <ul id="reviews-list"></ul>
         </section>

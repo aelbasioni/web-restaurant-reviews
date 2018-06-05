@@ -435,7 +435,7 @@ nav {
     }
 
 
-#reviews-list, #review-form{
+#reviews-list, #review-form {
     margin: 0;
     padding: 0;
 }
@@ -461,13 +461,13 @@ nav {
         }
 
 
-            #reviews-list li p:first-child, #review-form p:first-child{
+            #reviews-list li p:first-child, #review-form p:first-child {
                 background-color: #c15540;
                 color: #FFF;
                 padding: 15px 30px;
                 font-size: 20pt;
                 border-radius: 40px 0 0;
-                margin-top:0;
+                margin-top: 0;
             }
 
 
@@ -480,7 +480,7 @@ nav {
             }
 
 
-            #reviews-list li p:nth-child(3), #review-form label{
+            #reviews-list li p:nth-child(3), #review-form label {
                 font-weight: bold;
                 font-size: 14pt;
                 margin-top: 20px;
@@ -508,29 +508,98 @@ nav {
         }
 
 
-.rating {
-    font-size: 20pt;
+.rating {    
+    font-size: 24pt;
+    background-color:transparent;
+    border:0;
+    box-shadow:0;
 }
 
 
 .gold {
+    
     color: gold;
 }
 
+.fav {   
+    font-size: 25pt;
+    margin: 0px 10px;
+    padding:0px 10px;
+    cursor:pointer;
+}
 
-#review-form label {
+.left {
+    float: left;
+}
+
+
+.switch {
+    display: inline-block;
+    min-width: 170px;
+    margin:20px auto 0;
     display:block;
+    text-align:center;
+}
+.switch label {
+  font-weight: normal;
+  font-size: 14pt;
+  font-weight:700; 
+  cursor: pointer;
+}
+
+ .switch label input[type=checkbox]:checked + .lever {
+    background-color: #A5D365;
+}
+ .switch label input[type=checkbox]:checked + .lever:after {
+    background-color: #639420;
+    left: 24px;
+}
+    .switch label input[type=checkbox] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+    .switch label .lever {
+    content: "";
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 15px;
+    background-color: #818181;
+    border-radius: 15px;
+    margin-right: 10px;
+    transition: background 0.3s ease;
+    vertical-align: middle;
+    margin: 0 16px;
+}
+
+    .switch label .lever:after {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    background-color: #F1F1F1;
+    border-radius: 21px;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+    left: -5px;
+    top: -3px;
+    transition: left 0.3s ease, background .3s ease, box-shadow 0.1s ease;
+}
+#review-form label {
+    display: block;
 }
 
 
-#review-form input, #review-form textarea {
-    padding:6px 12px;
-    width:95%;
-    margin:0 0 10px;
+#review-form input:not([type=button]), #review-form textarea {
+    padding: 6px 12px;
+    width: 95%;
+    margin: 0 0 10px;
+    font-size:12pt;
 }
 
 
-#review-form a {
+#add_review {
     background-color: #cd4c00;
     color: #fff;
     display: inline-block;
@@ -541,18 +610,20 @@ nav {
     text-decoration: none;
     text-transform: uppercase;
     border-radius: 40px 0;
-    float:right;
+    float: right;
+    box-shadow: none;
+    border:0;
 }
 
-#review-form a:hover,
-        #review-form a:focus,.rating-block > span:hover,.rating-block > span:focus {
-            outline: 0;
-            -webkit-box-shadow: 0 0 1px 2px #3397db;
-            box-shadow: 0 0 1px 2px #3397db;
-        }
+    #add_review:hover,
+    #add_review:focus, .rating-block > span:hover, .rating-block > span:focus {
+        outline: 0;
+        -webkit-box-shadow: 0 0 1px 2px #3397db;
+        box-shadow: 0 0 1px 2px #3397db;
+    }
 
 .rating-block > span {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 
