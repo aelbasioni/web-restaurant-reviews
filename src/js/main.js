@@ -1,22 +1,18 @@
 ﻿let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines,
+  favs_only = false;
+var map;
+var markers = [];
 
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {    
-    updateRestaurants();  
+    updateRestaurants();
     fetchNeighborhoods();
-    fetchCuisines();
-    
-    const toggleFav =  document.getElementById('toggle_fav');
-    toggleFav.onclick = function(){
-        console.log(toggleFav.checked);
-    }
+    fetchCuisines();       
 });
 
 
@@ -100,6 +96,14 @@ var fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+    
+    const toggleFav =  document.getElementById('toggle_fav');
+    toggleFav.onclick = function(){
+        console.log(toggleFav.checked);
+        favs_only  = (toggleFav.checked == "checked" || toggleFav.checked === true);
+        updateRestaurants();
+    }
+
     const m = document.getElementById('map');
    
     //start observing map to enter the view:
@@ -149,14 +153,25 @@ var updateRestaurants = () => {
     const map = document.getElementById('map-container');
     map.setAttribute('aria-label', `map of ${cuisine} restaurants in ${neighborhood} neighborhood`);
   
-    DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-        if (error) { // Got an error!
-            console.error(error);
-        } else {
-            resetRestaurants(restaurants);
-            fillRestaurantsHTML();
-        }
-    })
+    if(favs_only){
+        DBHelper.fetchFavoriteRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+            if (error) { // Got an error!
+                console.error(error);
+            } else {
+                resetRestaurants(restaurants);
+                fillRestaurantsHTML();
+            }
+        })
+    }else {
+        DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+            if (error) { // Got an error!
+                console.error(error);
+            } else {
+                resetRestaurants(restaurants);
+                fillRestaurantsHTML();
+            }
+        })
+    }
 }
 
 
@@ -237,14 +252,27 @@ var createRestaurantHTML = (restaurant) => {
     address.innerHTML = restaurant.address;
     li.append(address);
 
-    const fav = document.createElement('input');
-    fav.value = '\u2606';
-    fav.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
-    fav.setAttribute("type","button");
-    fav.setAttribute("title","Favorites");
-    fav.className = 'rating fav left';
-    fav.onclick = function(){console.log(restaurant.id);}
-    li.append(fav)
+    const favBTN = document.createElement('input');
+    favBTN.className = 'rating fav left';
+    //convert is_favorite from string, if it's, to boolean:
+    restaurant.is_favorite = ((restaurant.is_favorite == "true") || restaurant.is_favorite == true);
+
+    //set the star appropriately:
+    if(restaurant.is_favorite === true){
+        favBTN.value = '\u2605';
+        favBTN.classList.add('gold');
+    }else
+        favBTN.value = '\u2606';
+
+    favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
+    favBTN.setAttribute("type","button");
+    favBTN.setAttribute("title","Favorites");    
+    
+    favBTN.onclick = function(){
+        restaurant.is_favorite = !restaurant.is_favorite;
+        toggleFavorite(favBTN,restaurant.id,restaurant.is_favorite);
+    }
+    li.append(favBTN);
 
     const more = document.createElement('a');
     more.innerHTML = 'View Details';
@@ -255,6 +283,27 @@ var createRestaurantHTML = (restaurant) => {
     return li
 }
 
+var toggleFavorite = function(el,restaurant_id,is_favorite){
+    DBHelper.toggleFavorite(restaurant_id,is_favorite).then((data) => {
+        if(is_favorite === true){
+            el.value = '\u2605';
+            el.classList.add('gold');
+        }else{
+            el.value = '\u2606';
+            el.classList.remove('gold');
+        }
+
+        //update the offline storage appropriately:
+        window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
+            if (restaurants) {
+                const restaurant = restaurants.find(r => r.id == restaurant_id);
+                restaurant.is_favorite = is_favorite;
+                DBHelper.saveFetchedData(RESTAURANTS_DBNAME, restaurants);
+            }
+        });
+    });
+    
+}
 
 /**
  * Fetch the image src if in the view

@@ -4,7 +4,8 @@
 const RESTAURANTS_DBNAME = "restaurants";
 const NEIBOURHOUDS_DBNAME = "neighborhoods";
 const CUISINE_DBNAME = "cuisines";
-
+const REVIEWS_DBNAME = "reviews";
+const FAVS_DBNAME = "favs";
 
 /*
 * Set the name of indexedDB to "Restaurants_App"
@@ -26,15 +27,17 @@ class DBHelper {
     */
     static get DATABASE_URL() {
         const port = 1337 // Change this to your server port
-        return `http://localhost:${port}/restaurants`;
+        //return `http://localhost:${port}/restaurants`;
+        return `http://localhost:${port}`;
     }
+
 
 
     /**
     * Fetch all restaurants.
     */
     static fetchRestaurants(callback) {
-        fetch(DBHelper.DATABASE_URL).then((response) => {
+        fetch(`${DBHelper.DATABASE_URL}/restaurants`).then((response) => {
             const result = response.json();
             //Save the fetched data in indexedDB
             DBHelper.saveFetchedData(RESTAURANTS_DBNAME, result);
@@ -96,7 +99,7 @@ class DBHelper {
 
         window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
             if (restaurants) {
-                callback(null, DBHelper.filterByCuisineAndNeighborhood(restaurants, cuisine, neighborhood));                
+                callback(null, DBHelper.filterByCuisineAndNeighborhood(restaurants, cuisine, neighborhood));
             } else {
                 // Fetch all restaurants
                 DBHelper.fetchRestaurants((error, restaurants) => {
@@ -118,6 +121,41 @@ class DBHelper {
         }
         if (neighborhood != 'all') { // filter by neighborhood
             results = results.filter(r => r.neighborhood == neighborhood);
+        }
+        return results;
+    }
+
+
+    /**
+    * Fetch favorite restaurants by a cuisine and a neighborhood with proper error handling.
+    */
+    static fetchFavoriteRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
+
+        window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
+            if (restaurants) {
+                callback(null, DBHelper.filterByFavoriteCuisineAndNeighborhood(restaurants, cuisine, neighborhood));
+            } else {
+                // Fetch favorite restaurants
+                DBHelper.fetchFavoriteRestaurants().then((restaurants) => {                                         
+                    callback(null, DBHelper.filterByFavoriteCuisineAndNeighborhood(restaurants, cuisine, neighborhood));                    
+
+                }).catch((error) => { callback(error, null); });
+            }
+        });
+    }
+
+    static filterByFavoriteCuisineAndNeighborhood(restaurants, cuisine, neighborhood) {
+        let results = restaurants
+        if (cuisine != 'all') { // filter by cuisine
+            results = results.filter(r => r.cuisine_type == cuisine && (r.is_favorite == "true" || r.is_favorite == true));
+        } else {
+            results = results.filter(r => (r.is_favorite == "true" || r.is_favorite == true));
+        }
+
+        if (neighborhood != 'all') { // filter by neighborhood
+            results = results.filter(r => r.neighborhood == neighborhood && (r.is_favorite == "true" || r.is_favorite == true));
+        } else {
+            results = results.filter(r => (r.is_favorite == "true" || r.is_favorite == true));
         }
         return results;
     }
@@ -223,6 +261,39 @@ class DBHelper {
         );
         return marker;
     }
+   
+
+    /**
+    * Fetch restaurant reviews.
+    */
+    static fetchRestaurantReviews(callback, restaurant_id) {
+        fetch(`${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant_id}`).then((response) => {
+            const result = response.json();
+            //Save the fetched data in indexedDB
+
+            DBHelper.saveFetchedData(RESTAURANTS_DBNAME, result);
+            return result;
+        }).then((data) => { callback(null, data); });
+    }
+
+    /**
+    * Favorite/Unfavorite a restaurant.
+    */
+    static toggleFavorite(restaurant_id, is_fav) {
+        return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=${is_fav}`, { method: 'PUT'}).then((response) => {
+            return response.json();
+        });
+    }
+
+
+    /**
+    * Get favorite restaurants.
+    */
+    static fetchFavoriteRestaurants() {
+        return fetch(`${DBHelper.DATABASE_URL}/restaurants/?is_favorite=true`).then((response) => {
+            return response.json();
+        });
+    }
 
 
     /**
@@ -231,5 +302,4 @@ class DBHelper {
     static saveFetchedData(dbName, data) {
         window.localforage.setItem(dbName, data);
     };
-
 }
