@@ -279,9 +279,26 @@ class DBHelper {
     /**
     * Favorite/Unfavorite a restaurant.
     */
-    static toggleFavorite(restaurant_id, is_fav) {
-        return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=${is_fav}`, { method: 'PUT'}).then((response) => {
+    static toggleFavorite(el, restaurant_id, is_favorite) {
+        fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=${is_favorite}`, { method: 'PUT' }).then((response) => {
             return response.json();
+        }).then((data) => {
+            if (is_favorite === true) {
+                el.value = '\u2605';
+                el.classList.add('gold');
+            } else {
+                el.value = '\u2606';
+                el.classList.remove('gold');
+            }
+
+            //update the offline storage appropriately:
+            window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
+                if (restaurants) {
+                    const restaurant = restaurants.find(r => r.id == restaurant_id);
+                    restaurant.is_favorite = is_favorite;
+                    DBHelper.saveFetchedData(RESTAURANTS_DBNAME, restaurants);
+                }
+            });
         });
     }
 

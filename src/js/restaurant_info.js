@@ -170,14 +170,29 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
-  const fav = document.createElement('input');
-  fav.value = '\u2606';
-  fav.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
-  fav.setAttribute("type","button");
-  fav.setAttribute("title","Favorites");
-  fav.className = 'rating fav';
-  fav.onclick = function(){console.log(restaurant.id);}
-  name.append(fav)
+  
+  
+  const favBTN = document.createElement('input');
+  favBTN.className = 'rating fav';
+    //convert is_favorite from string, if it's, to boolean:
+  restaurant.is_favorite = ((restaurant.is_favorite == "true") || restaurant.is_favorite == true);
+
+    //set the star appropriately:
+  if(restaurant.is_favorite === true){
+      favBTN.value = '\u2605';
+      favBTN.classList.add('gold');
+  }else
+      favBTN.value = '\u2606';
+
+  favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
+  favBTN.setAttribute("type","button");
+  favBTN.setAttribute("title","Favorites");    
+    
+  favBTN.onclick = function(){
+      restaurant.is_favorite = !restaurant.is_favorite;
+      DBHelper.toggleFavorite(favBTN,restaurant.id,restaurant.is_favorite);
+  }
+  name.append(favBTN)
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;

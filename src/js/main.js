@@ -270,7 +270,7 @@ var createRestaurantHTML = (restaurant) => {
     
     favBTN.onclick = function(){
         restaurant.is_favorite = !restaurant.is_favorite;
-        toggleFavorite(favBTN,restaurant.id,restaurant.is_favorite);
+        DBHelper.toggleFavorite(favBTN,restaurant.id,restaurant.is_favorite);
     }
     li.append(favBTN);
 
@@ -283,27 +283,6 @@ var createRestaurantHTML = (restaurant) => {
     return li
 }
 
-var toggleFavorite = function(el,restaurant_id,is_favorite){
-    DBHelper.toggleFavorite(restaurant_id,is_favorite).then((data) => {
-        if(is_favorite === true){
-            el.value = '\u2605';
-            el.classList.add('gold');
-        }else{
-            el.value = '\u2606';
-            el.classList.remove('gold');
-        }
-
-        //update the offline storage appropriately:
-        window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
-            if (restaurants) {
-                const restaurant = restaurants.find(r => r.id == restaurant_id);
-                restaurant.is_favorite = is_favorite;
-                DBHelper.saveFetchedData(RESTAURANTS_DBNAME, restaurants);
-            }
-        });
-    });
-    
-}
 
 /**
  * Fetch the image src if in the view
