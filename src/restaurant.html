@@ -66,11 +66,11 @@
             <form id="review-form">
                 <p>Add review</p>
                 <label>
-                    Name:<br />
+                    <span class="mandatory">*</span>Name:<br />
                     <input id="user_name" type="text" placeholder="Type your name" />
                 </label>
                 <label>
-                    Rate this restaurant:<br />
+                    <span class="mandatory">*</span>Rate this restaurant:<br />
                     <span class="rating-block">
                         <input type="button" aria-label="rate 1 of 5" data-value="1" class="rating" value="&#9734"/>
                         <input type="button" aria-label="rate 2 of 5" data-value="2" class="rating" value="&#9734"/>
@@ -80,10 +80,11 @@
                     </span>
                 </label>
                 <label>
-                    <textarea id="review-comment" placeholder="Type your review" aria-label="type your review" rows="5"></textarea>
+                    <textarea id="review_comment" placeholder="Type your review" aria-label="type your review" rows="5"></textarea>
                 </label>
                 <input type="button" id="add_review" value="Add"/>
             </form>
+            <img data-src="/img/loading.gif" id="loading-icon" alt="loading ..."/>
             <ul id="reviews-list"></ul>
         </section>
         <!-- End reviews -->

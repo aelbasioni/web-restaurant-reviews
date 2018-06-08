@@ -4,8 +4,6 @@
 const RESTAURANTS_DBNAME = "restaurants";
 const NEIBOURHOUDS_DBNAME = "neighborhoods";
 const CUISINE_DBNAME = "cuisines";
-const REVIEWS_DBNAME = "reviews";
-const FAVS_DBNAME = "favs";
 
 /*
 * Set the name of indexedDB to "Restaurants_App"
@@ -50,7 +48,7 @@ class DBHelper {
     * Fetch a restaurant by its ID.
     */
     static fetchRestaurantById(id, callback) {
-        fetch(`${DBHelper.DATABASE_URL}/${id}`).then(function (response) {
+        fetch(`${DBHelper.DATABASE_URL}/restaurants/${id}`).then(function (response) {
             return response.json();
         }).then(function (data) {
             callback(null, data);
@@ -266,15 +264,25 @@ class DBHelper {
     /**
     * Fetch restaurant reviews.
     */
-    static fetchRestaurantReviews(callback, restaurant_id) {
-        fetch(`${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant_id}`).then((response) => {
+    static fetchRestaurantReviews(restaurant_id) {        
+        return fetch(`${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant_id}`).then((response) => {
             const result = response.json();
             //Save the fetched data in indexedDB
-
-            DBHelper.saveFetchedData(RESTAURANTS_DBNAME, result);
+            DBHelper.saveFetchedData(`REVIEWS_R${self.restaurant.id}`, result);
             return result;
-        }).then((data) => { callback(null, data); });
+        });
     }
+
+
+    /**
+    * save a restaurant review.
+    */
+    static postRestaurantReview(review) {
+        return fetch(`${DBHelper.DATABASE_URL}/reviews/`, { method: 'POST', body: JSON.stringify(review) }).then((response) => {
+            return response.json();       
+        });
+    }
+
 
     /**
     * Favorite/Unfavorite a restaurant.
