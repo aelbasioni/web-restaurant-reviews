@@ -105,7 +105,6 @@
     <Content Include="img\loading.png" />
     <Content Include="img\logo.png" />
     <Content Include="img\logo_lg.png" />
-    <Content Include="js\common-defer.js" />
     <Content Include="js\localforage.min.js" />
     <Content Include="js\main.js" />
     <Content Include="js\polyfills\fetch.js" />

@@ -11,9 +11,7 @@ const observer_config = {
 document.addEventListener('DOMContentLoaded', (event) => {    
     attachClickEvents();
     window.addEventListener('online', checkForOfflineDataToPost);
-    window.addEventListener('offline', isOffline);
-    checkForOfflineDataToPost();
-    isOffline();
+    window.addEventListener('offline', isOffline);    
 });
 
 
@@ -21,6 +19,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+    //Check if some review needs to be sent to the server after losing connectivity:
+    checkForOfflineDataToPost();
+    isOffline();
+
     fetchRestaurantFromURL((error, restaurant) => {
         if (error) { // Got an error!
             console.error(error);
@@ -135,33 +137,33 @@ var handleFoundRestaurant = function(restaurant,callback){
  * Create restaurant HTML and add it to the webpage
  */
 var fillRestaurantHTML = (restaurant = self.restaurant) => {
-  const map = document.getElementById('map-container');
-  map.setAttribute('aria-label', `location of ${restaurant.name} on the map`);
+   const map = document.getElementById('map-container');
+   map.setAttribute('aria-label', `location of ${restaurant.name} on the map`);
 
-  const name = document.getElementById('restaurant-name');
-  name.innerHTML = restaurant.name;  
+   const name = document.getElementById('restaurant-name');
+   name.innerHTML = restaurant.name;  
   
-  const favBTN = document.createElement('input');
-  favBTN.className = 'rating fav';
-    //convert is_favorite from string, if it's, to boolean:
-  restaurant.is_favorite = ((restaurant.is_favorite == "true") || restaurant.is_favorite == true);
-  //set the star appropriately:
-  if(restaurant.is_favorite === true){
+   const favBTN = document.createElement('input');
+   favBTN.setAttribute("type","button");
+   favBTN.className = 'rating fav';
+   //convert is_favorite from string, if it's, to boolean:
+   restaurant.is_favorite = ((restaurant.is_favorite == "true") || restaurant.is_favorite == true);
+   //set the star appropriately:
+   if(restaurant.is_favorite === true){
       favBTN.value = '\u2726';
       favBTN.classList.add('gold');
       favBTN.setAttribute("title","Remove from favorites");
       favBTN.setAttribute('aria-label',`remove ${restaurant.name} from favorites`);
 
-  }else{
+   }else{
       favBTN.value = '\u2727';
       favBTN.setAttribute("title","Add to favorites");
       favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
-  }  
-  favBTN.setAttribute("type","button");  
-  favBTN.onclick = function(){
+   }    
+   favBTN.onclick = function(){
       restaurant.is_favorite = !restaurant.is_favorite;
       DBHelper.toggleFavorite(restaurant.id,restaurant.is_favorite).then((data) => {
-          updateFavoriteStatus(favBTN,restaurant);
+          DBHelper.updateFavoriteStatus(favBTN,restaurant);
       });
   }
   name.append(favBTN)
@@ -255,8 +257,9 @@ var getParameterByName = (name, url) => {
 }
 
 
-
-
+/*
+ * add click listeners to post review button & to the rating buttons:
+ */
 var attachClickEvents = () => {
 
     self.getReadyToPostReview();
@@ -274,17 +277,21 @@ var attachClickEvents = () => {
 };
 
 
-
+/*
+ * Style the rating buttons according to the selected rating value:
+ */
 function setRating(ratingValue, ratingStarsElements) {
 
     ratingValue = ratingValue - 1;
     let starsCount = 0;
     while (starsCount < 5) {
+        //color all the stars starting from the rating value to 1
         if (starsCount <= ratingValue && !ratingStarsElements[starsCount].classList.contains("gold")) {
             ratingStarsElements[starsCount].classList.add("gold");
             ratingStarsElements[starsCount].value = '\u2605';
         }
 
+        //uncolor the rest of the stars
         if (starsCount > ratingValue && ratingStarsElements[starsCount].classList.contains("gold")) {
             ratingStarsElements[starsCount].classList.remove("gold");
             ratingStarsElements[starsCount].value = '\u2606';
@@ -295,6 +302,9 @@ function setRating(ratingValue, ratingStarsElements) {
 }
 
 
+/*
+ * click listeners of the post review button
+ */
 var getReadyToPostReview =() =>{
     const addReviewBTN = document.getElementById('add_review');
     addReviewBTN.onclick = function () {
@@ -306,6 +316,9 @@ var getReadyToPostReview =() =>{
 }
 
 
+/*
+ * validate the post review fields:
+ */
 function validateReviewFormValues (){
     const userName = document.getElementById('user_name');
     if (userName.value === "") {
@@ -344,10 +357,14 @@ function validateReviewFormValues (){
 }
 
 
+/*
+ * clear form fileds
+ */
 function clearReviewFormFields (){
 
     rating = 0;
     document.getElementById('user_name').value = "";
+    //uncolor all the rating stars:
     const ratingStars = document.querySelectorAll('.rating-block > .rating');
     if (ratingStars) {
         ratingStars.forEach((ratingStar) => {
@@ -360,30 +377,26 @@ function clearReviewFormFields (){
 
 
 /**
-* Create all reviews HTML and add them to the webpage.
+* send my review to the server, or to indexedDB if no connectivity:
 */
-
 function  saveReview (myReview) {
-    console.log("save rev");
-    if (navigator.onLine) { //it's online
+    if (navigator.onLine) { //it's online, send to the server
         DBHelper.postRestaurantReview(myReview).then((data) => {
-            console.log("saved online", data);
             clearReviewFormFields();
             //push the new review to restaurant reviews in indexedDB if exists
             updateOfflineStorgae(true,data);
 
         }).catch((err) => { console.log("error in saving review", err); });
     
-    } else if (navigator.onLine === false) { //it's offline
+    } else if (navigator.onLine === false) { //it's offline, save in indexedDB
         showAlert("Internet connection is lost");
         DBHelper.saveFetchedData(OFFLINE_REVIEWS_POST, myReview).then(() => {
             clearReviewFormFields();
             createOfflineReviewHTML(myReview);
         });
         
-    } else { //online feature is not supported
+    } else { //online feature is not supported, send to the server anyway
         DBHelper.postRestaurantReview(myReview).then((data) => {
-            console.log("saved anyway", data);
             clearReviewFormFields();
             //push the new review to restaurant reviews in indexedDB if exists
             updateOfflineStorgae(true,data);
@@ -391,7 +404,6 @@ function  saveReview (myReview) {
         }).catch((err) => { console.log("error in saving review", err); });
     }
 }
-
 
 
 /**
@@ -495,6 +507,9 @@ var createReviewHTML = (review, isOfflineReview) => {
 }
 
 
+/**
+* Create review HTML for my pending review, and add it to the webpage.
+*/
 function createOfflineReviewHTML(review){
     const container = document.getElementById('reviews-container');
     const ul = document.getElementById('reviews-list');
@@ -513,8 +528,7 @@ function checkForOfflineDataToPost() {
             if (navigator.onLine) {
                 //re-post it if online
                 DBHelper.postRestaurantReview(myReview).then((data) => {
-                    console.log("re-saved", data);
-
+                
                     //clear the item because it's posted successfully
                     self.localforage.removeItem("review_post");
 
@@ -530,6 +544,9 @@ function checkForOfflineDataToPost() {
 }
 
 
+/*
+ * append the newly added review to the rest of reviews in indexedDB
+ */
 function updateOfflineStorgae(isNewReview,myReview){
     window.localforage.getItem(`REVIEWS_R${self.restaurant.id}`, function (err, reviews) {
         if (reviews) {
@@ -542,38 +559,15 @@ function updateOfflineStorgae(isNewReview,myReview){
             DBHelper.saveFetchedData(`REVIEWS_R${self.restaurant.id}`, reviews);
         }
     }).then(() => {
-        console.log("then after localforage");
         // fill reviews
         fillReviewsHTML();
     });
 }
 
 
-function updateFavoriteStatus(el, restaurant) {
-
-    if (restaurant.is_favorite === true) {
-        el.value = '\u2726';
-        el.classList.add('gold');
-        el.setAttribute("title", "Remove from favorites");
-        el.setAttribute('aria-label', `remove ${restaurant.name} from favorites`);
-    } else {
-        el.value = '\u2727';
-        el.classList.remove('gold');
-        el.setAttribute("title", "Add to favorites");
-        el.setAttribute('aria-label', `add ${restaurant.name} to favorites`);
-    }
-
-    //update the offline storage appropriately:
-    window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
-        if (restaurants) {
-            const savedRestaurant = restaurants.find(r => r.id == restaurant.id);
-            savedRestaurant.is_favorite = restaurant.is_favorite;
-            DBHelper.saveFetchedData(RESTAURANTS_DBNAME, restaurants);
-        }
-    });
-}
-
-
+/*
+ * to sort reviews by id: 
+ */
 function compare(a, b) {
     if (a.id < b.id)
         return -1;
@@ -583,12 +577,18 @@ function compare(a, b) {
 }
 
 
+/*
+ * show message if connectivity is lost
+ */
 function isOffline(){
     if (navigator.onLine === false) 
         showAlert("Internet connection is lost");
 }
 
 
+/*
+ * show alert message
+ */
 function showAlert(msg){
     const alertBox = document.getElementById('alert');
     alertBox.getElementsByClassName('msg')[0].innerText = msg;
@@ -597,12 +597,13 @@ function showAlert(msg){
 }
 
 
+/*
+ * close alert message; 
+ */
 function closeAlert(){
     const alertBox = document.getElementById('alert');
     alertBox.getElementsByClassName('msg')[0].innerText = "";
     alertBox.style.display = "none";
 }
-
-
 
 

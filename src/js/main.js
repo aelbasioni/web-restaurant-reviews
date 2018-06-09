@@ -97,6 +97,7 @@ var fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 window.initMap = () => {
     
+    //add functionality to toggle buttons:
     var toggleFavCustom = document.getElementById('toggle_fav_custom');
     const toggleFav =  document.getElementById('toggle_fav');
     toggleFav.onclick = function(){
@@ -105,6 +106,7 @@ window.initMap = () => {
         updateRestaurants();
     }
 
+    //support A11y for the custom toggle button:
     toggleFavCustom.onkeyup = function(e){
         //if(e.keyCode == 32){ //press spacebar
         if(e.keyCode == 13){ //press enter
@@ -264,6 +266,7 @@ var createRestaurantHTML = (restaurant) => {
     li.append(address);
 
     const favBTN = document.createElement('input');
+    favBTN.setAttribute("type","button");
     favBTN.className = 'rating fav left';
     //convert is_favorite from string, if it's, to boolean:
     restaurant.is_favorite = ((restaurant.is_favorite == "true") || restaurant.is_favorite == true);
@@ -278,15 +281,11 @@ var createRestaurantHTML = (restaurant) => {
         favBTN.value = '\u2727';
         favBTN.setAttribute("title","Add to favorites");
         favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
-    }
-
-    favBTN.setAttribute("type","button");
-    
-    
+    }    
     favBTN.onclick = function(){
         restaurant.is_favorite = !restaurant.is_favorite;
         DBHelper.toggleFavorite(restaurant.id,restaurant.is_favorite).then((data) => {
-            updateFavoriteStatus(favBTN,restaurant);
+            DBHelper.updateFavoriteStatus(favBTN,restaurant);
         });
     }
     li.append(favBTN);

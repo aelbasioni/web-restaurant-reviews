@@ -6,6 +6,7 @@ const NEIBOURHOUDS_DBNAME = "neighborhoods";
 const CUISINE_DBNAME = "cuisines";
 const OFFLINE_REVIEWS_POST = "review_post";
 
+
 /*
 * Set the name of indexedDB to "Restaurants_App"
 */
@@ -145,13 +146,13 @@ class DBHelper {
 
     static filterByFavoriteCuisineAndNeighborhood(restaurants, cuisine, neighborhood) {
         let results = restaurants
-        if (cuisine != 'all') { // filter by cuisine
+        if (cuisine != 'all') { // filter by cuisine & is_favorite
             results = results.filter(r => r.cuisine_type == cuisine && (r.is_favorite == "true" || r.is_favorite == true));
         } else {
             results = results.filter(r => (r.is_favorite == "true" || r.is_favorite == true));
         }
 
-        if (neighborhood != 'all') { // filter by neighborhood
+        if (neighborhood != 'all') { // filter by neighborhood & is_favorite
             results = results.filter(r => r.neighborhood == neighborhood && (r.is_favorite == "true" || r.is_favorite == true));
         } else {
             results = results.filter(r => (r.is_favorite == "true" || r.is_favorite == true));
@@ -291,6 +292,34 @@ class DBHelper {
     static toggleFavorite(restaurant_id, is_favorite) {
         return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=${is_favorite}`, { method: 'PUT' }).then((response) => {
             return response.json();
+        });
+    }
+
+
+    /*
+     * update favorite status for the fav button styles & in indexedDB
+     */
+    static updateFavoriteStatus(el, restaurant) {
+
+        if (restaurant.is_favorite === true) {
+            el.value = '\u2726';
+            el.classList.add('gold');
+            el.setAttribute("title", "Remove from favorites");
+            el.setAttribute('aria-label', `remove ${restaurant.name} from favorites`);
+        } else {
+            el.value = '\u2727';
+            el.classList.remove('gold');
+            el.setAttribute("title", "Add to favorites");
+            el.setAttribute('aria-label', `add ${restaurant.name} to favorites`);
+        }
+
+        //update the offline storage appropriately:
+        window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
+            if (restaurants) {
+                const savedRestaurant = restaurants.find(r => r.id == restaurant.id);
+                savedRestaurant.is_favorite = restaurant.is_favorite;
+                DBHelper.saveFetchedData(RESTAURANTS_DBNAME, restaurants);
+            }
         });
     }
 

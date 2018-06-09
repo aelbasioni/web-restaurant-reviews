@@ -628,8 +628,17 @@ nav {
 
 
     #add_review:hover,
-    #add_review:focus, .rating-block > span:hover, .rating-block > span:focus {
+    #add_review:focus {
         outline: 0;
+        -webkit-box-shadow: 0 0 1px 2px #3397db;
+        box-shadow: 0 0 1px 2px #3397db;
+    }
+
+    .rating-block > .rating:hover, .rating-block > .rating:focus {
+        outline: 0;
+    }
+
+    .rating-block > .rating:hover::before, .rating-block > .rating:focus::before {
         -webkit-box-shadow: 0 0 1px 2px #3397db;
         box-shadow: 0 0 1px 2px #3397db;
     }

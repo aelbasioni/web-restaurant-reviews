@@ -5,6 +5,7 @@ const ALL_CACHES = [
   CONTENT_IMAGES_CACHE
 ];
 
+
 /**
  * Cache the site assets 
  */

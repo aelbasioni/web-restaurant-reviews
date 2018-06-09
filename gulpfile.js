@@ -13,7 +13,6 @@ var config = {
     src: {
         root: './src/',
         js_common: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/registerserviceworker.js'],
-        js_defer: ['./src/js/common-defer.js'],
         //js_index: ['./src/js/main.js'],
         //js_restaurant_info: ['./src/js/restaurant_info.js'],
         js_index: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
@@ -35,6 +34,9 @@ var config = {
 }
 
 
+/*
+ * copy files from src to dist
+ */
 gulp.task('copy', function () {
     gulp.src(config.src.root + 'sw.js').pipe(gulp.dest(config.dist.root)),
     gulp.src(config.src.root + 'manifest.json').pipe(gulp.dest(config.dist.root)),
@@ -42,6 +44,9 @@ gulp.task('copy', function () {
 });
 
 
+/*
+ * minimize html files
+ */
 gulp.task('html:dist', function () {
     return gulp.src(config.src.html)
         .pipe($.plumber())
@@ -50,6 +55,9 @@ gulp.task('html:dist', function () {
 });
 
 
+/*
+ * Add vendor prefixes to CSS rules, bundle, minimize, and generate source map for the final css file
+ */
 gulp.task('css:dist', function () {
     return gulp.src(config.src.css)
         .pipe($.plumber())
@@ -65,6 +73,9 @@ gulp.task('css:dist', function () {
 });
 
 
+/*
+ * transpile polyfill files, uglify them, and add source map to them
+ */
 gulp.task('js_polyfills:dist', function () {
     return gulp.src(config.src.polyfills)
         .pipe($.plumber())
@@ -76,6 +87,9 @@ gulp.task('js_polyfills:dist', function () {
 });
 
 
+/*
+ * transpile common js files, bundle, uglify, and add source map to them
+ */
 gulp.task('js_common:dist', function () {
     return gulp.src(config.src.js_common)
         .pipe($.plumber())
@@ -86,18 +100,11 @@ gulp.task('js_common:dist', function () {
         .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
-gulp.task('js_defer:dist', function () {
-    return gulp.src(config.src.js_defer)
-        .pipe($.plumber())
-        .pipe($.sourcemaps.init())
-        .pipe($.babel())
-        .pipe($.uglify())
-        .pipe($.rename({ suffix: '.min' }))
-        .pipe($.sourcemaps.write("./"))
-        .pipe(gulp.dest(config.dist.js));
-});
 
 
+/*
+ * transpile js files for index.html page, bundle, uglify them, and add source map to them
+ */
 gulp.task('js_index:dist', function () {
     return gulp.src(config.src.js_index)
         .pipe($.plumber())
@@ -110,6 +117,9 @@ gulp.task('js_index:dist', function () {
 });
 
 
+/*
+ * transpile js files for restaurant.html page, bundle, uglify them, and add source map to them
+ */
 gulp.task('js_info:dist', function () {
     return gulp.src(config.src.js_restaurant_info)
         .pipe($.plumber())
@@ -122,9 +132,12 @@ gulp.task('js_info:dist', function () {
 });
 
 
-gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist','js_defer:dist', 'js_info:dist', 'js_polyfills:dist','copy']);
+gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist', 'js_info:dist', 'js_polyfills:dist','copy']);
 
 
+/*
+ * generate the critical css for index.html page and minimize it
+ */
 gulp.task('css:critical_index', function (cb) {
     critical.generate({
         base: config.dist.root,
@@ -148,6 +161,9 @@ gulp.task('css:critical_index', function (cb) {
 });
 
 
+/*
+ * generate the critical css for restaurant.html page and minimize it
+ */
 gulp.task('css:critical_info', function (cb) {
     critical.generate({
         base: config.dist.root,
@@ -171,7 +187,10 @@ gulp.task('css:critical_info', function (cb) {
 });
 
 
-/********************* Image opt & resizing ******************/
+/*** monitor change of images in src then rezise, optimize, and add the size prefixe to the image name ***/
+
+
+//resize to width 800
 gulp.task('img-opt-large', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -182,6 +201,7 @@ gulp.task('img-opt-large', function () {
 });
 
 
+//resize to width 800 and webp
 gulp.task('img-webp-large', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -192,6 +212,7 @@ gulp.task('img-webp-large', function () {
 });
 
 
+//resize to width 650
 gulp.task('img-resize-medium2', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -203,6 +224,7 @@ gulp.task('img-resize-medium2', function () {
 });
 
 
+//resize to width 420
 gulp.task('img-resize-medium', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -213,6 +235,7 @@ gulp.task('img-resize-medium', function () {
 });
 
 
+//resize to width 300
 gulp.task('img-resize-small', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -223,6 +246,8 @@ gulp.task('img-resize-small', function () {
 
 });
 
+
+//resize to width 650 & webp
 gulp.task('img-resize-medium2-webp', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -235,6 +260,7 @@ gulp.task('img-resize-medium2-webp', function () {
 });
 
 
+//resize to width 420 & webp
 gulp.task('img-resize-medium-webp', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -246,6 +272,7 @@ gulp.task('img-resize-medium-webp', function () {
 });
 
 
+//resize to width 300 & webp
 gulp.task('img-resize-small-webp', function () {
     gulp.src(config.src.img)
     .pipe($.changed(config.dist.img))
@@ -258,6 +285,9 @@ gulp.task('img-resize-small-webp', function () {
 });
 
 
+/*
+* monitor change in the logo then rezise & optimize it
+ */
 gulp.task('logo-resize', function () {
     gulp.src(config.src.img_logo)
     .pipe($.changed(config.dist.img))
@@ -267,10 +297,14 @@ gulp.task('logo-resize', function () {
 
 });
 
+
 gulp.task('img-resize', ['img-opt-large', 'img-webp-large', 'img-resize-medium', 'img-resize-small','logo-resize']);
 gulp.task('img-resize-webp', ['img-resize-medium2-webp', 'img-resize-medium-webp', 'img-resize-small-webp']);
 
 
+/*
+ * monitor any change to re-run the tasks
+ */
 gulp.task('watch', function () {
     gulp.watch([config.src.html], ['html:dist']);
     gulp.watch([config.src.css], ['css:dist']);
