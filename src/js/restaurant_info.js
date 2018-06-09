@@ -11,8 +11,9 @@ const observer_config = {
 document.addEventListener('DOMContentLoaded', (event) => {    
     attachClickEvents();
     window.addEventListener('online', checkForOfflineDataToPost);
-    //window.addEventListener('offline', checkForOfflineDataToPost);
+    window.addEventListener('offline', isOffline);
     checkForOfflineDataToPost();
+    isOffline();
 });
 
 
@@ -308,7 +309,7 @@ var getReadyToPostReview =() =>{
 function validateReviewFormValues (){
     const userName = document.getElementById('user_name');
     if (userName.value === "") {
-        alert("Please, enter your name");
+        showAlert("Please, enter your name");
         userName.setAttribute("aria-invalid", true);
         userName.focus();
         return;
@@ -317,13 +318,14 @@ function validateReviewFormValues (){
     }
 
     if (rating === 0) {
-        alert(`Please, enter a rating for "${restaurant.name}"`);
+        showAlert(`Please, enter a rating for "${restaurant.name}"`);
+        document.querySelectorAll('.rating-block > .rating')[0].focus();
         return;
     }
 
     const reviewComment = document.getElementById('review_comment');
     if (reviewComment.value === "" || reviewComment.value.length < 10) {
-        alert(`Please, type a valid comment about "${restaurant.name}"`);
+        showAlert(`Please, type a valid comment about "${restaurant.name}"`);
         reviewComment.setAttribute("aria-invalid", true);
         reviewComment.focus();
         return;
@@ -373,6 +375,7 @@ function  saveReview (myReview) {
         }).catch((err) => { console.log("error in saving review", err); });
     
     } else if (navigator.onLine === false) { //it's offline
+        showAlert("Internet connection is lost");
         DBHelper.saveFetchedData(OFFLINE_REVIEWS_POST, myReview).then(() => {
             clearReviewFormFields();
             createOfflineReviewHTML(myReview);
@@ -523,16 +526,7 @@ function checkForOfflineDataToPost() {
         } else {
             console.log("no offline data");
         }
-    });
-    var connectionStatus = document.getElementById('connectionStatus');
-
-    if (navigator.onLine) {
-        //connectionStatus.innerHTML = 'You are currently online!';
-        console.log("online", navigator.onLine);
-    } else {
-        //connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
-        console.log("onifline", navigator.onLine);
-    }
+    });    
 }
 
 
@@ -586,6 +580,27 @@ function compare(a, b) {
     if (a.id > b.id)
         return 1;
     return 0;
+}
+
+
+function isOffline(){
+    if (navigator.onLine === false) 
+        showAlert("Internet connection is lost");
+}
+
+
+function showAlert(msg){
+    const alertBox = document.getElementById('alert');
+    alertBox.getElementsByClassName('msg')[0].innerText = msg;
+    alertBox.style.display = "inline-block";
+    setTimeout(() => { closeAlert(); }, 5000);
+}
+
+
+function closeAlert(){
+    const alertBox = document.getElementById('alert');
+    alertBox.getElementsByClassName('msg')[0].innerText = "";
+    alertBox.style.display = "none";
 }
 
 

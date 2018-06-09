@@ -540,6 +540,7 @@ nav {
     text-align: center;
 }
 
+
     .switch label {
         font-weight: normal;
         font-size: 14pt;
@@ -547,20 +548,24 @@ nav {
         cursor: pointer;
     }
 
+
         .switch label input[type=checkbox]:checked + .lever {
             background-color: #A5D365;
         }
+
 
             .switch label input[type=checkbox]:checked + .lever:after {
                 background-color: #639420;
                 left: 24px;
             }
 
+
         .switch label input[type=checkbox] {
             opacity: 0;
             width: 0;
             height: 0;
         }
+
 
         .switch label .lever {
             content: "";
@@ -576,6 +581,7 @@ nav {
             margin: 0 16px;
         }
 
+
             .switch label .lever:after {
                 content: "";
                 position: absolute;
@@ -589,6 +595,7 @@ nav {
                 top: -3px;
                 transition: left 0.3s ease, background .3s ease, box-shadow 0.1s ease;
             }
+
 
 #review-form label {
     display: block;
@@ -619,6 +626,7 @@ nav {
     border: 0;
 }
 
+
     #add_review:hover,
     #add_review:focus, .rating-block > span:hover, .rating-block > span:focus {
         outline: 0;
@@ -626,20 +634,53 @@ nav {
         box-shadow: 0 0 1px 2px #3397db;
     }
 
+
 .rating-block > span {
     cursor: pointer;
 }
+
 
 #loading-icon {
     margin:auto auto 10px;
     display:none;
 }
 
+
 .mandatory {
     color:#cd4c00;
     font-size:20pt;
     margin:2px;
 }
+
+/* Alerts ====================================== */
+#alert {
+    max-width: 320px;
+    text-align: center;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    color: #fff !important;
+    display: none; 
+    margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out; z-index: 1031; bottom: 20px; left: 0px; right: 0px;padding:10px 20px;
+    background-color: rgba(51, 51, 51, 0.89);
+}
+
+#alert .close {
+    color: #fff;
+    opacity: 1;
+    border: none;
+    text-shadow: none;
+    background-color:transparent;
+    font-size:20pt;
+    position: absolute; right: 10px; top: 5px; z-index: 1033;
+}
+
 /* ===================== Media queries for index.html and common markups ================= */
 @media only screen and (max-width: 450px) {
     nav .logo {
