@@ -259,14 +259,17 @@ var createRestaurantHTML = (restaurant) => {
 
     //set the star appropriately:
     if(restaurant.is_favorite === true){
-        favBTN.value = '\u2605';
+        favBTN.value = '\u2726';
         favBTN.classList.add('gold');
-    }else
-        favBTN.value = '\u2606';
+        favBTN.setAttribute("title","Remove from favorites");
+    }else{
+        favBTN.value = '\u2727';
+        favBTN.setAttribute("title","Add to favorites");
+    }
 
     favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
     favBTN.setAttribute("type","button");
-    favBTN.setAttribute("title","Favorites");    
+    
     
     favBTN.onclick = function(){
         restaurant.is_favorite = !restaurant.is_favorite;

@@ -4,12 +4,13 @@
 const RESTAURANTS_DBNAME = "restaurants";
 const NEIBOURHOUDS_DBNAME = "neighborhoods";
 const CUISINE_DBNAME = "cuisines";
+const OFFLINE_REVIEWS_POST = "review_post";
 
 /*
 * Set the name of indexedDB to "Restaurants_App"
 */
-if (window.localforage)
-    window.localforage.config({
+if (self.localforage)
+    self.localforage.config({
     name: 'Restaurants_App'
 });
 
@@ -274,14 +275,7 @@ class DBHelper {
     }
 
 
-    /**
-    * save a restaurant review.
-    */
-    static postRestaurantReview(review) {
-        return fetch(`${DBHelper.DATABASE_URL}/reviews/`, { method: 'POST', body: JSON.stringify(review) }).then((response) => {
-            return response.json();       
-        });
-    }
+    
 
 
     /**
@@ -292,11 +286,13 @@ class DBHelper {
             return response.json();
         }).then((data) => {
             if (is_favorite === true) {
-                el.value = '\u2605';
+                el.value = '\u2726';
                 el.classList.add('gold');
+                el.setAttribute("title", "Remove from favorites");
             } else {
-                el.value = '\u2606';
+                el.value = '\u2727';
                 el.classList.remove('gold');
+                el.setAttribute("title", "Add to favorites");
             }
 
             //update the offline storage appropriately:

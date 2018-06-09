@@ -12,12 +12,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 var attachClickEvents = function(){
-    const addReviewBTN =  document.getElementById('add_review');
-    addReviewBTN.onclick = function(){
-        console.log("btn");
-        saveReview();
-    }
-
+    
     const ratingStars = document.querySelectorAll('.rating-block > .rating');
     if(ratingStars){
         ratingStars.forEach((ratingStar) => {
@@ -51,39 +46,7 @@ var setRating = function(ratingValue,ratingStarsElements){
 }
 
 
-var saveReview = function(){
-    
-    const userName =  document.getElementById('user_name');
-    if(userName.value === "")
-    {
-        alert("Please, enter your name");
-        userName.focus();
-        return;
-    }
-    
-    if(rating === 0)
-    {
-        alert(`Please, enter a rating for "${restaurant.name}"`);
-        return;
-    }
 
-    const reviewComment =  document.getElementById('review_comment');
-    if(reviewComment.value === "" || reviewComment.value.length < 10)
-    {
-        alert(`Please, type a valid comment about "${restaurant.name}"`);
-        reviewComment.focus();
-        return;
-    }
-    
-    const myReview = {
-        "restaurant_id": restaurant.id,
-        "name": userName.value,
-        "rating": rating,
-        "comments": reviewComment.value
-    }
-
-    DBHelper.postRestaurantReview(myReview).then((data) =>{console.log("saved",data)});
-}
 
 
 /**
@@ -216,14 +179,17 @@ var fillRestaurantHTML = (restaurant = self.restaurant) => {
   restaurant.is_favorite = ((restaurant.is_favorite == "true") || restaurant.is_favorite == true);
   //set the star appropriately:
   if(restaurant.is_favorite === true){
-      favBTN.value = '\u2605';
+      favBTN.value = '\u2726';
       favBTN.classList.add('gold');
-  }else
-      favBTN.value = '\u2606';
+      favBTN.setAttribute("title","Remove from favorites");
 
+  }else{
+      favBTN.value = '\u2727';
+      favBTN.setAttribute("title","Add to favorites");
+  }
   favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
   favBTN.setAttribute("type","button");
-  favBTN.setAttribute("title","Favorites");        
+  
   favBTN.onclick = function(){
       restaurant.is_favorite = !restaurant.is_favorite;
       DBHelper.toggleFavorite(favBTN,restaurant.id,restaurant.is_favorite);
@@ -364,7 +330,7 @@ var createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = (new Date(review.updatedAt)).toLocaleDateString();
   li.appendChild(date);
 
   const rating = document.createElement('p');

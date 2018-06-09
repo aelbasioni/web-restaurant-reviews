@@ -1,4 +1,15 @@
-﻿const STATIC_CACHE_NAME = 'restaurants-static-v1';
+﻿importScripts('/js/localforage.min.js');
+
+/*
+* Set the name of indexedDB to "Restaurants_App"
+*/
+if (self.localforage)
+    self.localforage.config({
+        name: 'Restaurants_App'
+    });
+
+
+const STATIC_CACHE_NAME = 'restaurants-static-v1';
 const CONTENT_IMAGES_CACHE = 'restaurants-content-imgs';
 const ALL_CACHES = [
   STATIC_CACHE_NAME,
@@ -87,3 +98,48 @@ function serveImage(request) {
     });
 }
 
+
+
+self.addEventListener('sync', function (event) {
+    if (event.tag == 'post-review') {
+        event.waitUntil(saveReview(event));
+    }
+});
+
+
+function saveReview(event) {
+    console.log("ready");
+    
+    self.localforage.getItem("review_post", function (err, myReview) {
+        if (myReview) {
+            console.log("done", myReview);
+            postRestaurantReview(myReview).then((data) => {
+                console.log("saved", data);
+
+                self.localforage.removeItem("review_post");
+
+                //send message to the page to reresh the data:
+                clients.matchAll().then(clients => {
+                    clients.forEach(client => {
+                        client.postMessage({ "msg": "review_post","data":data });
+                    })
+                })
+
+            }).catch((err) => { console.log("error in saving review", err); });
+
+        } else {
+            console.log("err", err);
+        }
+    });
+}
+
+
+
+/**
+* save a restaurant review.
+*/
+function postRestaurantReview(review) {
+    return fetch(`http://localhost:1337/reviews/`, { method: 'POST', body: JSON.stringify(review) }).then((response) => {
+        return response.json();       
+    });
+}
