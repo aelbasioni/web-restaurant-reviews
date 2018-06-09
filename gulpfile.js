@@ -310,7 +310,6 @@ gulp.task('watch', function () {
     gulp.watch([config.src.css], ['css:dist']);
     gulp.watch([config.src.js_index], ['js_index:dist']);
     gulp.watch([config.src.js_restaurant_info], ['js_info:dist']);
-    gulp.watch([config.src.js_defer], ['js_defer:dist']);
     gulp.watch([config.src.root + 'sw.js', config.src.root + 'js/map.js', config.src.root + 'manifest.json', config.src.root + 'data/*.json'], ['copy']);
 });
 

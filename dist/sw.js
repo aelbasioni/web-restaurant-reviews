@@ -17,7 +17,6 @@ self.addEventListener('install', (event) => {
             '/restaurant.html',
             '/js/script_index.min.js',
             '/js/script_info.min.js',
-            '/js/common-defer.min.js',
             '/css/style.min.css',
             '/favicon.ico',
             'https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff',

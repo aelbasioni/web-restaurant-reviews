@@ -71,7 +71,7 @@ var showStaticMap = function(){
 
 
 /**
- * Fetch an INTERACTIVE map if a small part of it is in the view
+ * Fetch an INTERACTIVE map if a big part of it is in the view
  */
 var showMap = function(){
 
@@ -358,7 +358,7 @@ function validateReviewFormValues (){
 
 
 /*
- * clear form fileds
+ * clear form fields
  */
 function clearReviewFormFields (){
 
@@ -412,7 +412,7 @@ function  saveReview (myReview) {
 var fillReviewsHTML = () => {
 
     const container = document.getElementById('reviews-container');
-    //start observing map to enter the view:
+    //start observing reviews container to enter the view:
     var observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.intersectionRatio > 0) {
@@ -421,7 +421,7 @@ var fillReviewsHTML = () => {
                 loadingIcon.setAttribute("src",loadingIcon.getAttribute("data-src"));
                 loadingIcon.style.display = "block";
 
-                //ge fetch reviews:
+                //go fetch reviews:
                 fetchReiews(container,loadingIcon);
                 observer.unobserve(entry.target);
             }
@@ -437,7 +437,7 @@ var fetchReiews = (container,loadingIcon) => {
             doFillReviewsHTML(container,loadingIcon,reviews);
 
         } else {
-            //fetch revires from network if not exist in indexedDB:
+            //fetch reviwes from network if not exist in indexedDB:
             DBHelper.fetchRestaurantReviews(self.restaurant.id).then((reviews) => {    
                 doFillReviewsHTML(container,loadingIcon,reviews);
 
@@ -488,8 +488,7 @@ var createReviewHTML = (review, isOfflineReview) => {
     li.appendChild(date);
 
     const rating = document.createElement('p');
-    //rating.innerHTML = `Rating: ${review.rating}`;
-    //Add five stars and give them a gold class accordig to the rating value
+    //Add five stars and give them a gold class according to the rating value
     let ratingStars = '';
     let starsCount = 1;
     while(starsCount <= 5) {
