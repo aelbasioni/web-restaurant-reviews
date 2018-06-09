@@ -97,11 +97,22 @@ var fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 window.initMap = () => {
     
+    var toggleFavCustom = document.getElementById('toggle_fav_custom');
     const toggleFav =  document.getElementById('toggle_fav');
     toggleFav.onclick = function(){
-        console.log(toggleFav.checked);
         favs_only  = (toggleFav.checked == "checked" || toggleFav.checked === true);
+        toggleFavCustom.setAttribute("aria-checked",favs_only);
         updateRestaurants();
+    }
+
+    toggleFavCustom.onkeyup = function(e){
+        //if(e.keyCode == 32){ //press spacebar
+        if(e.keyCode == 13){ //press enter
+            favs_only  = !(toggleFav.checked == "checked" || toggleFav.checked === true);
+            toggleFav.checked = favs_only;
+            toggleFavCustom.setAttribute("aria-checked",favs_only);
+            updateRestaurants();  
+        }
     }
 
     const m = document.getElementById('map');

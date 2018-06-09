@@ -306,13 +306,14 @@ var getReadyToPostReview =() =>{
 
 
 function validateReviewFormValues (){
-    console.log("btn");
-
     const userName = document.getElementById('user_name');
     if (userName.value === "") {
         alert("Please, enter your name");
+        userName.setAttribute("aria-invalid", true);
         userName.focus();
         return;
+    }else {
+        userName.setAttribute("aria-invalid", false);
     }
 
     if (rating === 0) {
@@ -323,8 +324,11 @@ function validateReviewFormValues (){
     const reviewComment = document.getElementById('review_comment');
     if (reviewComment.value === "" || reviewComment.value.length < 10) {
         alert(`Please, type a valid comment about "${restaurant.name}"`);
+        reviewComment.setAttribute("aria-invalid", true);
         reviewComment.focus();
         return;
+    }else{
+        reviewComment.setAttribute("aria-invalid", false);
     }
 
     const myReview = {

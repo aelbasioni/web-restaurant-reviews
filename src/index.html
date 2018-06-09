@@ -39,7 +39,7 @@
 
             </div>
             <div class="switch">
-                <label>My favorites only<input type="checkbox" id="toggle_fav"><span class="lever"></span></label>
+                <label>My favorites only<input type="checkbox" id="toggle_fav" aria-hidden="true" tabindex="-1"><span class="lever" id="toggle_fav_custom" role="checkbox" aria-checked="false" tabindex="0" aria-label="My favorites only. press enter to toggle"></span></label>
             </div>
             <ul id="restaurants-list"></ul>
         </section>
