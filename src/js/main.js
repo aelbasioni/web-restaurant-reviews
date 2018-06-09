@@ -262,18 +262,21 @@ var createRestaurantHTML = (restaurant) => {
         favBTN.value = '\u2726';
         favBTN.classList.add('gold');
         favBTN.setAttribute("title","Remove from favorites");
+        favBTN.setAttribute('aria-label',`remove ${restaurant.name} from favorites`);
     }else{
         favBTN.value = '\u2727';
         favBTN.setAttribute("title","Add to favorites");
+        favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
     }
 
-    favBTN.setAttribute('aria-label',`add ${restaurant.name} to favorites`);
     favBTN.setAttribute("type","button");
     
     
     favBTN.onclick = function(){
         restaurant.is_favorite = !restaurant.is_favorite;
-        DBHelper.toggleFavorite(favBTN,restaurant.id,restaurant.is_favorite);
+        DBHelper.toggleFavorite(restaurant.id,restaurant.is_favorite).then((data) => {
+            updateFavoriteStatus(favBTN,restaurant);
+        });
     }
     li.append(favBTN);
 

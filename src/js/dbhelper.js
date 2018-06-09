@@ -275,34 +275,22 @@ class DBHelper {
     }
 
 
-    
+    /**
+    * save a restaurant review.
+    */
+    static postRestaurantReview(review) {
+        return fetch(`${DBHelper.DATABASE_URL}/reviews/`, { method: 'POST', body: JSON.stringify(review) }).then((response) => {
+            return response.json();       
+        });
+    }
 
 
     /**
     * Favorite/Unfavorite a restaurant.
     */
-    static toggleFavorite(el, restaurant_id, is_favorite) {
-        fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=${is_favorite}`, { method: 'PUT' }).then((response) => {
+    static toggleFavorite(restaurant_id, is_favorite) {
+        return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=${is_favorite}`, { method: 'PUT' }).then((response) => {
             return response.json();
-        }).then((data) => {
-            if (is_favorite === true) {
-                el.value = '\u2726';
-                el.classList.add('gold');
-                el.setAttribute("title", "Remove from favorites");
-            } else {
-                el.value = '\u2727';
-                el.classList.remove('gold');
-                el.setAttribute("title", "Add to favorites");
-            }
-
-            //update the offline storage appropriately:
-            window.localforage.getItem(RESTAURANTS_DBNAME, function (err, restaurants) {
-                if (restaurants) {
-                    const restaurant = restaurants.find(r => r.id == restaurant_id);
-                    restaurant.is_favorite = is_favorite;
-                    DBHelper.saveFetchedData(RESTAURANTS_DBNAME, restaurants);
-                }
-            });
         });
     }
 
@@ -321,6 +309,6 @@ class DBHelper {
     * add objectStore to indexDB.
     */
     static saveFetchedData(dbName, data) {
-        window.localforage.setItem(dbName, data);
+        return window.localforage.setItem(dbName, data);
     };
 }

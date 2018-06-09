@@ -13,6 +13,7 @@ var config = {
     src: {
         root: './src/',
         js_common: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/registerserviceworker.js'],
+        js_defer: ['./src/js/common-defer.js'],
         //js_index: ['./src/js/main.js'],
         //js_restaurant_info: ['./src/js/restaurant_info.js'],
         js_index: ['./src/js/localForage.min.js', './src/js/dbhelper.js', './src/js/main.js', './src/js/registerserviceworker.js'],
@@ -85,6 +86,16 @@ gulp.task('js_common:dist', function () {
         .pipe($.sourcemaps.write("./"))
         .pipe(gulp.dest(config.dist.js));
 });
+gulp.task('js_defer:dist', function () {
+    return gulp.src(config.src.js_defer)
+        .pipe($.plumber())
+        .pipe($.sourcemaps.init())
+        .pipe($.babel())
+        .pipe($.uglify())
+        .pipe($.rename({ suffix: '.min' }))
+        .pipe($.sourcemaps.write("./"))
+        .pipe(gulp.dest(config.dist.js));
+});
 
 
 gulp.task('js_index:dist', function () {
@@ -111,7 +122,7 @@ gulp.task('js_info:dist', function () {
 });
 
 
-gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist', 'js_info:dist', 'js_polyfills:dist','copy']);
+gulp.task('copy:dist', ['html:dist', 'css:dist', 'js_index:dist','js_defer:dist', 'js_info:dist', 'js_polyfills:dist','copy']);
 
 
 gulp.task('css:critical_index', function (cb) {
@@ -265,6 +276,7 @@ gulp.task('watch', function () {
     gulp.watch([config.src.css], ['css:dist']);
     gulp.watch([config.src.js_index], ['js_index:dist']);
     gulp.watch([config.src.js_restaurant_info], ['js_info:dist']);
+    gulp.watch([config.src.js_defer], ['js_defer:dist']);
     gulp.watch([config.src.root + 'sw.js', config.src.root + 'js/map.js', config.src.root + 'manifest.json', config.src.root + 'data/*.json'], ['copy']);
 });
 
