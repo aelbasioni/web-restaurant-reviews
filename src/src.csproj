@@ -115,7 +115,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="data\restaurants.json" />
-    <Content Include="README.md" />
     <Content Include="img\1-300px.webp" />
     <Content Include="img\1-420px.webp" />
     <Content Include="img\1-650px.webp" />
