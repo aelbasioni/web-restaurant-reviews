@@ -20,6 +20,7 @@ This project qualified me to become certified Mobile Web Specialist from [Udacit
 - Users are able to toggle listing only favorites or all restaurants 
 
 - Lighthouse registered **more than 90%** score for each of _Performance_, _Accessibility_,and _Progressive Web App_ audits
+
 ## Project Features:
 
 - Plain CSS and responsive images to achieve site responsiveness; the site UI is compatible with a range of display sizes, and the application elements are visible and usable in all viewports
@@ -67,3 +68,4 @@ Open [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-serve
 - If you don't have Python installed, navigate to [Python's website](https://www.python.org/) to download and install the software.
 - With your server running, visit the site: http://localhost:8000 and explore the web application
     
+**To be mentioned**: I'm not the owner of the site logo, and I couldn't reach him
