@@ -19,7 +19,6 @@ This project qualified me to become certified Mobile Web Specialist from [Udacit
 
 - Users are able to toggle listing only favorites or all restaurants 
 
-- Lighthouse registered **more than 90%** score for each of _Performance_, _Accessibility_,and _Progressive Web App_ audits
 
 ## Project Features:
 
@@ -30,6 +29,8 @@ This project qualified me to become certified Mobile Web Specialist from [Udacit
 - Offline use; IndexedDB and Service worker APIs and caches are used to store the AppShell and the contents for offline use
 
 - Navigator Online/Offline helps Users to be able to add a review to a restaurant while offline and the review is sent to the server when connectivity is re-established
+
+- Lighthouse registered **more than 90%** score for each of _Performance_, _Accessibility_,and _Progressive Web App_ audits
 
 ## How to test the project:
 
